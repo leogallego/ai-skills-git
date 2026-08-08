@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+.idea/
+.venv/
+__pycache__/
+.lola/

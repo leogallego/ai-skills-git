@@ -1,0 +1,8 @@
+{
+  "name": "ai-skills-git",
+  "version": "1.0.0",
+  "description": "Git/GitHub agent skills: worktrees, multi-agent issue workflow, sandbox tool routing, AI-aware gitignore, Closes verification. Agentskills.io format; installable via Lola or Cursor skills.",
+  "author": {
+    "name": "Leonardo Gallego"
+  }
+}
