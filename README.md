@@ -43,7 +43,7 @@ All names follow `git-<concern>` (see CONTRIBUTING).
 | One issue | **`git-issue 123`** |
 | Many issues / stacks | **`git-pipeline #1 #2`** |
 | Sandbox / GPG broken | **`git-sandbox`** |
-| Wrong `Closes #N` | **`git-closes`** |
+| Wrong `Closes #N` / “Does not close #N” false positive | **`git-closes`** |
 | AI junk in `git status` | **`git-ignore-ai`** |
 
 ## Layout

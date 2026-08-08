@@ -51,6 +51,7 @@ per `git-sandbox`.
   - Complete → `Closes #N`
   - Partial → `Partial progress on #N` (no Closes); update issue checklist;
     link deferred issues
+  - Never “Does not close #N” — GitHub still auto-closes (`git-closes`)
 
 API via MCP/`gh` (`git-sandbox`).
 
