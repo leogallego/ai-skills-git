@@ -250,7 +250,8 @@ Done on https://github.com/leogallego/ai-skills-git (`origin` = base = push).
 - [x] Merge-via-API while primary checkout stayed on `main`
 - [ ] Then: archive `issue-pipeline-skill` (M4 last checkbox)
 
-**Note:** Cursor `move_agent_to_root` failed when primary held `main` (tried to check out `main` in the new root). Worked around by editing via worktree absolute paths.
+**Note:** Cursor `move_agent_to_root` quirk documented in `git-worktree` §4a
+(Related to #9).
 
 ---
 

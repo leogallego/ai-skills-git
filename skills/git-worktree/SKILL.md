@@ -13,7 +13,7 @@ compatibility: >-
   Superpowers optional peer.
 metadata:
   author: Leonardo Gallego
-  version: "1.1.1"
+  version: "1.1.2"
   collection: workflow
 ---
 
@@ -136,7 +136,7 @@ Resolve `base=`:
 #### 4a. Native tools (preferred)
 
 Use the host’s worktree helper when available, then move the agent root into
-that directory **before any edits**:
+that directory **before any edits** when the host supports it:
 
 | Host | Tools / actions |
 |------|-----------------|
@@ -147,9 +147,23 @@ that directory **before any edits**:
 Pass/create branch named `branch=`. Native tools own path placement — do not
 also run bare `git worktree add` if the host already created one.
 
+**Cursor `move_agent_to_root` quirk:** after `git worktree add -b <feature>
+<base>`, calling `move_agent_to_root` on the new path may fail with
+`fatal: '<default-branch>' is already used by worktree at '<primary>'` — the
+helper tries to check out the default branch (e.g. `main`) even though the
+linked worktree is already on `branch=`. **Do not STOP** if the worktree
+exists and is on the correct branch. Fallback:
+
+1. Leave the IDE/agent root on the primary checkout if needed.
+2. Target the worktree with absolute paths and/or Shell `working_directory` /
+   `git -C <worktree-path> …`.
+3. Still run [§5](#5-verify-before-any-edits) against that worktree path
+   before any edits or commits.
+
 #### 4b. Git fallback
 
-Only when no native create tool is available.
+Only when no native create tool is available (or native move failed and you
+still need a worktree — create with git, then use the Cursor fallback above).
 
 **Directory priority:** (1) path from user/issue prompt, (2) existing
 `.worktrees/` or `.claude/worktrees/` or `worktrees/`, (3) default `.worktrees/`.
@@ -160,27 +174,37 @@ git check-ignore -q .worktrees 2>/dev/null \
   || git check-ignore -q worktrees 2>/dev/null
 ```
 
-If the chosen parent is not ignored, add it to `.gitignore` before creating.
+If the chosen parent is not ignored:
+
+1. Prefer appending to **repo** `.gitignore` (commit with the change that needs
+   it), **or**
+2. For a same-session unblock when `base=` lacks that ignore rule yet: append
+   to **local** `.git/info/exclude` (e.g. `.worktrees/`) so `worktree add` is
+   not dirty in the primary tree. Still add `.worktrees/` to `.gitignore` in a
+   later commit when practical.
 
 ```bash
 mkdir -p "$LOCATION"
 git worktree add "$LOCATION/$BRANCH_NAME" -b "$BRANCH_NAME" "$BASE_REF"
 ```
 
-Then `cd` / move agent root to that path.
+Then `cd` / move agent root to that path (or Cursor fallback if move fails).
 
 If sandbox blocks `git worktree add`, report the failure. Under
 `git-issue` / `git-pipeline` / `git-implement`: **STOP**.
 
 ### 5. Verify before any edits
 
+Run in the **worktree** (IDE cwd may still be primary — that is OK after the
+Cursor quirk):
+
 ```bash
-pwd
-git branch --show-current
-git rev-parse --abbrev-ref HEAD
+git -C "$WORKTREE" branch --show-current
+git -C "$WORKTREE" rev-parse --abbrev-ref HEAD
+# or: cd "$WORKTREE" && pwd && git branch --show-current
 ```
 
-- `pwd` must be the worktree path.
+- Effective git/edit path must be the worktree (not the primary checkout).
 - Branch must equal `branch=` when assigned.
 - If mismatch: **STOP**.
 
@@ -198,9 +222,11 @@ primary tree — prefer
 | Issue repo ≠ any remote URL | STOP; add remote or fix issue/repo |
 | Nested worktree | Reuse current isolation |
 | Wrong branch after create | STOP; do not hard-reset |
-| Path not gitignored | Add ignore before `worktree add` |
+| Path not gitignored | `.gitignore` and/or `.git/info/exclude` before `worktree add` |
 | Peer owns branch/worktree | STOP; new branch name from base |
 | Sandbox blocks `worktree add` | Report; required-isolation callers STOP |
+| Cursor `move_agent_to_root` → default branch “already used by worktree” | Expected when primary holds `main`/`master`; keep using the feature worktree via path/`git -C` (see §4a) |
+| Edits land in primary while feature worktree exists | Re-verify §5; rewrite paths to `$WORKTREE` |
 
 ## Related skills
 
