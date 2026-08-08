@@ -10,7 +10,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.1.0"
+  version: "1.1.1"
   collection: workflow
 ---
 
@@ -62,14 +62,17 @@ Significant premise invalid → **skip**: comment why, return
 | medium | 5–15 files, new module or significant refactor |
 | large | 15+ files, architectural changes, multiple test types |
 
-### 5. Skill mapping (local, stack-relevant only)
+### 5. Skill mapping (local, stack-relevant + config overrides)
 
 **Goal:** load skills that help *this* repo and issue — not every skill on the
-machine.
+machine. Index both **user** and **project** installs; select by stack unless
+the project config explicitly names a skill.
 
-1. **Discover locally available skills** (union; skip missing roots):
-   - Project: `**/skills/*/SKILL.md`, `.cursor/skills/**`, `.claude/skills/**`
-   - User/host installs: `~/.cursor/skills/**`, `~/.claude/skills/**` (follow
+1. **Discover locally available skills** (union of **project + user**; skip
+   missing roots — same skill `name` once is enough; prefer project path if
+   both exist):
+   - **Project:** `**/skills/*/SKILL.md`, `.cursor/skills/**`, `.claude/skills/**`
+   - **User/host:** `~/.cursor/skills/**`, `~/.claude/skills/**` (follow
      symlinks; use the target `SKILL.md`)
    - Other agent skill roots the host documents (Lola, Claude plugins, …)
 2. **Index lightly:** frontmatter `name` + `description` (first ~15–30 lines).
@@ -80,13 +83,20 @@ machine.
    - TypeScript/JS → `package.json` / `tsconfig*.json`
    - Go / Rust → `go.mod` / `Cargo.toml`
    - Plus paths the issue will touch
-4. **Select `skills_needed`:** match index entries whose descriptions/names fit
-   the stack **and** likely touched paths (e.g. Python PEP/testing skills on a
-   Python change; Kotlin/Android skills on Android UI work). Include
-   `always_load_review_skills` from `.git-pipeline.yml` when set.
-5. **Do not force unrelated skills** — skip packs for other ecosystems even if
-   installed locally. Prefer fewer, on-point skills over a full dump.
-6. Record the chosen names (and briefly why) for `git-plan` / `git-implement`.
+4. **Select `skills_needed` (auto):** match index entries whose
+   descriptions/names fit the stack **and** likely touched paths (e.g. Python
+   style/testing skills on a Python change; Kotlin/Android skills on Android
+   UI). Prefer fewer, on-point skills — do **not** auto-load unrelated
+   ecosystems just because they are installed.
+5. **`always_load_review_skills` (manual config wins):** for each name listed
+   in `.git-pipeline.yml`, if that skill exists in the local index (user or
+   project), **always** add it to `skills_needed` — even when it looks
+   off-stack. Missing name → note in assess output; do not invent a skill.
+   Example: Python repo with `always_load_review_skills: [pep8-review]` →
+   always load `pep8-review` when installed; a mistaken
+   `pf-component-check` entry would still load if present (operator chose it).
+6. Record the chosen names (and briefly why: auto vs config) for `git-plan` /
+   `git-implement`.
 
 ### 6. On-demand context
 

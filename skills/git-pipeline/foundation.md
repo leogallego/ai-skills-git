@@ -26,18 +26,23 @@ Full skill bodies are loaded later via `git-assess` → `skills_needed` (not her
 
 ## Local skill index (discover, don’t preload)
 
-Scan installed skill roots (project + `~/.cursor/skills` + `~/.claude/skills` +
-host docs). Record `name` + one-line description for each.
+Scan **both** project and user skill roots (`**/skills`, `.cursor/skills`,
+`.claude/skills`, `~/.cursor/skills`, `~/.claude/skills`, host docs). Record
+`name` + one-line description for each. Matching later uses this combined
+index — project and user installs are equal candidates.
 
-**Selection happens in `git-assess`:** pick only skills relevant to this
-project’s stack and the issue’s paths. Examples of *relevance* (illustrative —
-only if that skill is actually installed):
+**Selection happens in `git-assess`:**
 
-| Stack signals | Prefer skills about… |
-|---------------|----------------------|
+1. **Auto:** skills relevant to this project’s stack and the issue’s paths
+   (only if present in the index).
+2. **Config:** names in `always_load_review_skills` — load if present, even
+   when off-stack (manual entry wins).
+
+| Stack signals | Auto-prefer skills about… (if installed) |
+|---------------|------------------------------------------|
 | `pyproject.toml`, `*.py` | Python style, typing, tests, packaging |
 | Android/Gradle/Kotlin | Kotlin, Android UI, app architecture |
 | `package.json` / TS | Frontend/TS conventions for that repo |
 
-Never load “every Python skill” on a Kotlin repo or vice versa. Unrelated local
-installs stay in the index unused.
+Never auto-load “every Python skill” on a Kotlin repo or vice versa. Unrelated
+installs stay in the index unused unless named in config.
