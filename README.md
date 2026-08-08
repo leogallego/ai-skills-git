@@ -18,7 +18,7 @@ Pipeline migration: [PIPELINE_PLAN.md](PIPELINE_PLAN.md).
 
 ## Status
 
-M1 skeleton in place (phase skills stubbed; port content in M2). Apache-2.0.
+M2 phase port complete (assess/plan/implement/pr/pipeline). Apache-2.0.
 
 ## Skills
 
@@ -28,11 +28,11 @@ All names follow `git-<concern>` (see CONTRIBUTING).
 |-------|--------|------|
 | `git-worktree` | Mechanics | Verify remotes (origin/upstream/fork), then isolate with `base=` / `branch=` |
 | `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) |
-| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge *(stub → M2)* |
-| `git-assess` | Phase | Issue vs codebase assessment *(stub → M2)* |
-| `git-plan` | Phase | Plan + plan review *(stub → M2)* |
-| `git-implement` | Phase | Worktree + implement + review + fix *(stub → M2)* |
-| `git-pr` | Phase | One PR + Closes + merge mechanics *(stub → M2)* |
+| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge |
+| `git-assess` | Phase | Issue vs codebase assessment |
+| `git-plan` | Phase | Plan + plan review |
+| `git-implement` | Phase | Worktree + implement + review + fix |
+| `git-pr` | Phase | One PR + Closes + merge mechanics |
 | `git-sandbox` | Environment | git CLI vs GitHub MCP; SSH commit signing |
 | `git-ignore-ai` | Hygiene | AI-aware `.gitignore` |
 | `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` |
@@ -60,11 +60,11 @@ ai-skills-git/
 └── skills/
     ├── git-worktree/
     ├── git-issue/
-    ├── git-pipeline/          # stub
-    ├── git-assess/            # stub
-    ├── git-plan/              # stub
-    ├── git-implement/         # stub
-    ├── git-pr/                # stub
+    ├── git-pipeline/
+    ├── git-assess/
+    ├── git-plan/
+    ├── git-implement/
+    ├── git-pr/
     ├── git-sandbox/
     ├── git-ignore-ai/
     └── git-closes/

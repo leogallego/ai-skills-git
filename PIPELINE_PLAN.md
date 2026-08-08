@@ -2,7 +2,7 @@
 
 Migrate and rebuild [`issue-pipeline-skill`](../issue-pipeline-skill) into this pack as `git-*` skills. Two thin entry points share the same phase skills — no copied workflows.
 
-**Status:** M1 complete — M2 port next  
+**Status:** M2 complete — M3 consistency / M4 retire source / M5 prove  
 **Source:** `~/Claude/issue-pipeline-skill` (Apache-2.0)  
 **Target:** `~/Claude/ai-skills-git`
 
@@ -216,13 +216,13 @@ Commit after each completed M-step (and other significant edits). See CONTRIBUTI
 
 ### M2 — Port (order)
 
-1. [ ] `git-assess` + assessment template  
-2. [ ] `git-plan` + plan-reviewer prompt  
-3. [ ] `git-implement` + prompts → `git-worktree`  
-4. [ ] `git-pr` + templates → `git-closes`, `git-sandbox`  
-5. [ ] `git-issue` thin orchestrator (single)  
-6. [ ] `git-pipeline` orchestrator + foundation/conventions/triage/completion + merge sequence  
-7. [ ] Validate all skills  
+1. [x] `git-assess` + assessment template  
+2. [x] `git-plan` + plan-reviewer prompt  
+3. [x] `git-implement` + prompts → `git-worktree`  
+4. [x] `git-pr` + templates → `git-closes`, `git-sandbox`  
+5. [x] `git-issue` thin orchestrator (single)  
+6. [x] `git-pipeline` orchestrator + foundation/conventions/triage/completion + merge sequence  
+7. [x] Validate all skills + M2 commit  
 
 ### M3 — Consistency pass
 

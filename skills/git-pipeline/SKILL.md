@@ -1,16 +1,16 @@
 ---
 name: git-pipeline
 description: >-
-  Multi-issue GitHub pipeline: verify remotes, triage and dependency DAG,
-  stacked worktrees/PRs where needed, then assess → plan → implement → PR per
-  issue and sequential merge. Use when the user passes multiple issue numbers,
-  asks for issue-pipeline style batch processing, or needs stacked PRs.
+  Multi-issue GitHub pipeline: verify remotes, load foundation/conventions,
+  triage dependency DAG, stacked worktrees/PRs, assess → plan → implement → PR
+  per issue, merge gate and sequential merge. Use for multiple issue numbers,
+  stacks, or full batch processing; prefer git-issue for one standalone issue.
 license: Apache-2.0
 compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "0.1.0"
+  version: "1.0.0"
   collection: workflow
 ---
 
@@ -18,57 +18,79 @@ metadata:
 
 ## Overview
 
-**Batch / stacked orchestrator.** Entry: `git-pipeline #1 #2 #3`. Thin skill:
-sequences triage + phase skills; does not duplicate their procedures.
+Batch / stacked orchestrator. Thin: sequences triage + phase skills; does not
+paste their bodies. Adapted from `issue-pipeline-skill` (see pack `NOTICE`).
 
-**Stub (M1):** structure and contracts only. Full triage/foundation/conventions/
-merge-sequence content lands in M2 from `issue-pipeline-skill`.
+Helpers: [foundation.md](foundation.md), [conventions.md](conventions.md),
+[triage-prompt.md](triage-prompt.md),
+[completion-report.md](completion-report.md).
 
 ## When to use / not
 
-**Use when:** multiple issues; dependencies; stacked PRs; full pipeline run.
+**Use when:** multiple issues; dependencies; stacked PRs.
 
-**Not when:** a single standalone issue → prefer `git-issue`.
+**Not when:** one standalone issue → `git-issue`.
 
 ## Hard stops
 
-- Verify remotes before any fetch/push (`git-worktree` §0). Match each issue’s
-  `owner/repo` to **base-remote** (STOP if mismatch/ambiguous).
-- Never edit the primary checkout; never reuse peer worktrees/branches.
+- `git-worktree` §0 remotes before any fetch/push; issue repos must match
+  **base-remote**.
+- Never edit primary checkout; never reuse peer worktrees/branches.
 - Subagents do not push (`git-sandbox`).
 - Collision STOP; partial progress / deferrals via `git-pr`.
-- Merge gate + sequential merge owned **here**; single-PR merge call → `git-pr`.
+- Merge gate + sequential merge + worktree prune owned **here**.
 
-## Instructions (contract)
+## Instructions
 
 ### 1. Remotes
 
 Run `git-worktree` §0. Record `base-remote`, `push-remote`, default branch.
 
-### 2. Foundation + conventions (M2)
+### 2. Foundation + conventions
 
-Load `foundation.md` / `conventions.md` when present; write/read
-`.git-pipeline.yml`. (Files added in M2.)
+Follow [foundation.md](foundation.md) then [conventions.md](conventions.md).
 
-### 3. Triage (M2)
+### 3. Triage
 
-Fetch all issues; parse deps; DAG; chains; skips. Optional `triage-prompt.md`.
+Parse input numbers/URLs. Dispatch or run [triage-prompt.md](triage-prompt.md):
+fetch issues, deps, DAG, chains, skips, risk. Tooling via `git-sandbox`.
 
-### 4. Per issue
+Host-neutral run state: checklist of issues (pending / in progress / done /
+skipped / failed). Use host task APIs when available.
 
-For each issue in order:
+### 4. Per-issue loop
 
-1. `git-assess`
-2. `git-plan` if medium/large
-3. `git-implement` with `branch=<type>/<n>-<slug>` and
-   `base=<base-remote>/<default>` (first/standalone) or prior issue branch
-   (later in chain)
-4. `git-pr` (push to **push-remote**)
+For each issue in chain order (then standalones):
 
-### 5. Merge gate + sequential merge (M2)
+| Step | Skill | Notes |
+|------|-------|-------|
+| Assess | `git-assess` | Skip remainder if outdated |
+| Plan | `git-plan` | Skip if trivial/small |
+| Implement | `git-implement` | `branch=<type>/<n>-<slug>`; `base=` default or prior branch |
+| PR | `git-pr` | Push to **push-remote**; stack base when not first |
 
-Human approval; merge via `git-pr` mechanics; worktree cleanup; completion
-report.
+First in chain / standalone: `base=<base-remote>/<default-branch>`.  
+Later in chain: `base=<previous-issue-branch>`.
+
+### 5. Merge gate
+
+After PRs exist: present [completion-report.md](completion-report.md). Wait for
+human approval (only required human checkpoint for merge).
+
+### 6. Sequential merge
+
+For each chain in order, merge PRs bottom-up or as stack requires:
+
+1. Call `git-pr` single-PR merge mechanics (API if needed).
+2. Update next stacked PR base if required.
+3. Remove worktrees for merged branches when safe.
+4. Fetch **base-remote** between merges.
+
+Do not checkout/reset the primary repo to merge.
+
+### 7. Done
+
+Final completion report: PRs merged/skipped/failed; deferred issue links.
 
 ## Related skills
 

@@ -123,7 +123,7 @@ Commit after every significant change. At minimum, **one commit per completed PI
 - [x] Validate with `skills-ref`; Cursor + Claude skill symlinks installed
 - [x] Initial commit on `main`
 - [x] M1 skeleton (stubs, `git-issue` rewrite, remotes in `git-worktree`)
-- [ ] M2 port phase content from `issue-pipeline-skill`
+- [x] M2 port phase content from `issue-pipeline-skill`
 - [ ] Retire old `~/.claude/skills/{ai-gitignore,sandbox-git-github,issue-pipeline}` when ready
 - [ ] GitHub remote when asked
 

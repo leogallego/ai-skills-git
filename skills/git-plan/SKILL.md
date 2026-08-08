@@ -9,7 +9,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "0.1.0"
+  version: "1.0.0"
   collection: workflow
 ---
 
@@ -17,24 +17,62 @@ metadata:
 
 ## Overview
 
-Phase skill: plan + plan review. **Stub (M1).** M2 ports plan generation,
-`plan-reviewer-prompt.md`, and plan path discovery (`docs/plans/` etc.).
+Plan + plan review before code. Adapted from `issue-pipeline-skill` Phases 3–4.
 
-## When to use / not
+**Skip** when assess scope is trivial/small (fast path → `git-implement`).
 
-**Use when:** assess scope is medium/large.
+## Instructions
 
-**Not when:** trivial/small fast path → caller skips straight to `git-implement`.
+### 1. Load skills
 
-## Instructions (contract)
+Read full `SKILL.md` for every name in assess `skills_needed`.
 
-1. Load skills listed by `git-assess`.
-2. Write a file-by-file plan under a discovered plans directory (M2).
-3. Run plan review (prompt in M2); revise until acceptable.
-4. Hand plan path to `git-implement`.
+### 2. Generate plan
+
+If Superpowers `writing-plans` (or equivalent) is loaded, use it. Otherwise
+cover:
+
+- File-by-file changes (what/why/order)
+- New files (purpose, location per project layout)
+- Test strategy (commands/dirs from foundation/conventions)
+- Build/CI changes if any
+- Migration/compat — or explicit “No migration needed”
+
+### 3. Save plan
+
+Discover plans dir: existing `docs/**/plans/`, else `docs/plans/`.
+
+```text
+docs/plans/YYYY-MM-DD-issue-NNN-<slug>.md
+```
+
+Slug from title: lowercase, hyphens, max 40 chars.
+
+### 4. Validate against assess
+
+- Extra files: legitimate miss → update assess; overreach → trim plan
+- Acceptance criteria covered?
+- No work for `out_of_scope` issues
+
+### 5. Large-issue decomposition
+
+If large (15+ files / natural seams): split into sequential tasks (internal
+stack). Each task: `branch=<type>/<n>-task-<T>-<slug>`, base = previous task
+branch; PRs use `Part of #N` except last (`Closes #N` via `git-closes`).
+Caller (`git-pipeline` / `git-issue`) runs implement→pr per task.
+
+### 6. Plan review
+
+Dispatch reviewer with [plan-reviewer-prompt.md](plan-reviewer-prompt.md).
+Finding format: severity, area, description, suggestion.
+
+| Outcome | Action |
+|---------|--------|
+| Criticals | Revise plan; re-review (max 2 loops) |
+| Warnings | Fix or justify in plan |
+| Clean | Hand plan path to `git-implement` |
 
 ## Related skills
 
-- `git-assess` — prior phase
-- `git-implement` — next phase
-- `git-issue`, `git-pipeline` — callers
+- `git-assess`, `git-implement`
+- `git-issue`, `git-pipeline`
