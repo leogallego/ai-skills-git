@@ -11,9 +11,11 @@ Portable **git / forge** skill pack that is:
    directory, valid frontmatter (`license` / `compatibility` / `metadata` ok)
 2. **Lola-installable** — skill pack at repo root (`skills/…`); optional richer
    context via `module/AGENTS.md`
-3. **Cursor-friendly** — `./scripts/install-cursor.sh` → `~/.cursor/skills/`
+3. **Multi-agent install** — `./scripts/install-agents.sh` →
+   `~/.agents/skills/` (cross-client), with mirrors to Cursor/Claude when present
 
-Author to the agentskills.io spec; Lola and Cursor distribute.
+Author to the agentskills.io spec; distribute via `.agents/skills`, Lola, or
+plugin.
 
 ## Entries
 
@@ -23,6 +25,7 @@ Author to the agentskills.io spec; Lola and Cursor distribute.
 | `git-pipeline` | Batch / DAG / stacked PRs; `stack_ci: serial` by default |
 
 Phases: `git-assess` → `git-plan` (medium+) → `git-implement` → `git-pr`.  
+Architecture review: `git-review` (from implement/pr angles or standalone).  
 Mechanics: `git-worktree` §0 remotes, `git-sandbox`, `git-closes`, `git-ignore-ai`.
 
 ## Hard rules (do not regress)
@@ -39,13 +42,11 @@ Mechanics: `git-worktree` §0 remotes, `git-sandbox`, `git-closes`, `git-ignore-
 
 ```bash
 ./scripts/validate-skills.sh
-./scripts/install-cursor.sh
+./scripts/install-agents.sh
 
 # Lola skill pack (force repo root — see README)
-lola mod add /path/to/ai-skills-git --module-content=/
-lola install ai-skills-git --scope user
-# optional context append:
-# lola install ai-skills-git --scope user --append-context module/AGENTS.md
+# lola mod add /path/to/ai-skills-git --module-content=/
+# lola install ai-skills-git --scope user
 ```
 
 ## Docs
@@ -53,3 +54,5 @@ lola install ai-skills-git --scope user
 - [README.md](README.md) — users / forge scope / install
 - [CONTRIBUTING.md](CONTRIBUTING.md) — naming and authoring
 - [PIPELINE_PLAN.md](PIPELINE_PLAN.md) — migration status
+- [GIT_REVIEW_SPEC.md](GIT_REVIEW_SPEC.md) — `git-review` design
+- [docs/architecture/service-contracts.md](docs/architecture/service-contracts.md) — pack contracts

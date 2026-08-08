@@ -20,55 +20,33 @@ Do not require skills that were not selected in `skills_needed`.
 
 ### If review_angle is "architecture"
 
-Check the diff against every applicable section of the project's architecture contracts. If the foundation context includes a service contracts document, check every section — don't skip any.
+**Prefer `git-review`:** if that skill is loaded or present in the local skill
+index, follow its `SKILL.md` end-to-end (contracts resolution,
+bootstrap-if-missing, hard/soft checks, report-format). Do not duplicate its
+procedure here. Return Finding blocks with severity `critical` /
+`warning` / `info` (map Error→critical, Warning→warning, Info→info) plus the
+rollup Verdict so the caller can aggregate with other angles.
 
-**Layer discipline:**
-- Does new code skip architectural layers (e.g., UI calling data layer directly)?
-- Do imports flow in the correct direction (higher layers depend on lower, never reverse)?
-- Are there layer-skipping shortcuts? (Check confirmed conventions for layer names and prohibited cross-layer access patterns)
+**Fallback** (when `git-review` is unavailable): check the diff against every
+applicable section of the project's architecture contracts in foundation
+context. If no service contracts document exists, return a single **info**
+finding that contracts are missing and suggest running `git-review` (scaffold
+offer) — do **not** invent rules or report Clean.
 
-**Interface contracts:**
-- Are required interfaces created for new repositories, services, managers?
-- Are implementations bound to interfaces (not concrete types) in the DI system?
-- Are new API endpoints added to the correct existing service interface?
-- Do new tools implement the correct base interface and register properly?
+When contracts exist, check at least:
 
-**Module boundaries:**
-- Does shared/common code import platform-specific code?
-- Does shared/common code contain platform-specific imports that violate the project's module boundary rules? (Check confirmed conventions for prohibited import patterns)
-- If the project uses platform abstraction mechanisms, are declarations complete with all required implementations? (Check confirmed conventions for abstraction patterns)
-- Is shared logic placed in shared modules, not app-specific modules?
+**Layer discipline:** imports respect documented layer direction; no layer
+skipping or upward deps (use confirmed layer names).
 
-**State management:**
-- Are mutable state holders properly encapsulated? (Check confirmed conventions for the project's mutable/immutable exposure pattern)
-- Does UI state follow the project's documented state pattern? (Check confirmed conventions for variant names and structure)
-- Are one-time events modeled separately from persistent state? (Check confirmed conventions for event modeling approach)
+**Interface / DI / modules / state:** required interfaces and bindings; module
+or source-set boundaries; mutable state encapsulation and documented UI state
+patterns — only where the contracts/conventions define them.
 
-**Dependency injection:**
-- Are new classes registered in the appropriate DI module?
-- Are bindings to interfaces, not concrete types?
-- Are injectable components registered using the framework's pattern? (Check confirmed conventions)
-- Is manual instantiation used where DI should be?
+**Placement / size / naming:** files in the right module; size thresholds and
+named exceptions; naming patterns from contracts.
 
-**Error handling:**
-- Does new error handling use the project's error model? (Check confirmed conventions for error type patterns)
-- Are transport errors normalized at the correct boundary? (Check confirmed conventions for the designated error normalization layer)
-- Are user-facing error messages derived in the presentation layer?
-
-**Naming conventions:**
-- Do new files, classes, variables, packages follow project naming conventions?
-- Are interfaces named with the project's documented prefix/suffix convention? (Check confirmed conventions)
-- Do key component types follow established naming patterns? (Check confirmed conventions for component naming rules)
-
-**File placement:**
-- Are new files in the correct module and directory? (Check confirmed conventions for source organization)
-- Do directory choices match the code's dependency scope?
-
-**File size and complexity:**
-- Do changes push a file past the project's size threshold (check foundation context for documented limits)?
-- Does the project document size exceptions? If so, only flag files not in the exception list.
-- Does a constructor now take more dependencies than the project's threshold?
-- Are there multiple groups of private helpers that don't interact (extraction signal)?
+**Error handling at boundaries:** project error model and normalization layer
+when documented.
 
 ### If review_angle is "code-quality"
 

@@ -60,7 +60,26 @@ Diff since merge-base with `base=`.
 | trivial / small | architecture + code-quality |
 | medium / large | architecture, code-quality, security, skill-compliance |
 
-Use `reviewer-prompt.md` per angle. Aggregate findings (critical → must fix;
+**Architecture angle:** if `git-review` is in the local skill index (or listed
+in `always_load_review_skills`), load and follow it — contracts discovery,
+bootstrap-if-missing, report format. Otherwise use `reviewer-prompt.md`
+architecture fallback against foundation contracts.
+
+When architecture used `git-review`, **normalize into the same Finding list**
+as other angles before aggregating (so §5 Fix and PR review-summary stay
+uniform):
+
+| `git-review` | Finding `severity` |
+|--------------|---------------------|
+| Error / must-fix | `critical` |
+| Warning / consider | `warning` |
+| Info | `info` |
+
+Keep the rollup **Verdict** (`Clean` / `Fixable` / …) as a single info-line
+or review-summary blurb — do not drop it. `Skipped — no contracts` → no
+criticals from this angle; other angles may continue.
+
+Other angles: `reviewer-prompt.md`. Aggregate findings (critical → must fix;
 warnings → fix or justify; info → note).
 
 ### 5. Fix
@@ -75,6 +94,6 @@ Branch ready for `git-pr` on **push-remote**.
 
 ## Related skills
 
-- `git-worktree`, `git-pr`, `git-sandbox`
+- `git-worktree`, `git-pr`, `git-sandbox`, `git-review`
 - `git-assess`, `git-plan`
 - `git-issue`, `git-pipeline`

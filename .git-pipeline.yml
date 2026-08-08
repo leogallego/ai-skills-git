@@ -1,0 +1,18 @@
+# git-pipeline conventions — ai-skills-git pack
+version: 1
+default_branch: main
+branch_pattern: "<type>/<n>-<slug>"
+merge_method: merge
+stack_ci: serial
+labels: true
+attribution: "Assisted-by: Cursor (Grok 4.5)"
+test_commands: []
+lint_commands:
+  - "./scripts/validate-skills.sh"
+always_load_review_skills:
+  - git-review
+architecture:
+  contracts: docs/architecture/service-contracts.md
+claude_md_hash: ""
+forge:
+  provider: github

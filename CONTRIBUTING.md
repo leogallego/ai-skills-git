@@ -22,6 +22,7 @@ Development guide for this pack: naming, authoring, candidate evaluation, and ne
 | `git-assess` | Phase | Issue vs codebase assessment |
 | `git-plan` | Phase | Plan + plan review |
 | `git-implement` | Phase | Isolate + implement + review + fix |
+| `git-review` | Phase | Architecture contract review (+ scaffold) |
 | `git-pr` | Phase | One PR, Closes, single-PR merge |
 | `git-sandbox` | Environment | Tool routing + SSH commit signing |
 | `git-ignore-ai` | Hygiene | AI-aware `.gitignore` |
@@ -109,6 +110,7 @@ Keep Claude-only keys under `metadata.claude-*` (not top-level).
 | Single-issue entry | `git-issue` |
 | Batch / stack / merge sequence | `git-pipeline` |
 | Assess / plan / implement / one PR | `git-assess` / `git-plan` / `git-implement` / `git-pr` |
+| Architecture contract review | `git-review` (rules in project `service-contracts.md`) |
 | Sandbox tool route + SSH signing | `git-sandbox` |
 | AI `.gitignore` | `git-ignore-ai` |
 | `Closes #` verify | `git-closes` |
@@ -134,9 +136,9 @@ Commit after every significant change. At minimum, **one commit per completed PI
 ## Progress
 
 - [x] Five `git-*` names + domains
-- [x] `git init -b main`; Apache-2.0 `LICENSE` + `NOTICE`, `.gitignore`, `.claude-plugin/plugin.json`, `scripts/install-cursor.sh`
+- [x] `git init -b main`; Apache-2.0 `LICENSE` + `NOTICE`, `.gitignore`, `.claude-plugin/plugin.json`, install scripts
 - [x] Implement `skills/git-{worktree,issue,sandbox,ignore-ai,closes}/`
-- [x] Validate with `skills-ref`; Cursor + Claude skill symlinks installed
+- [x] Validate with `skills-ref`; multi-agent install via `scripts/install-agents.sh` (`~/.agents/skills` + mirrors)
 - [x] Initial commit on `main`
 - [x] M1 skeleton (stubs, `git-issue` rewrite, remotes in `git-worktree`)
 - [x] M2 port phase content from `issue-pipeline-skill`

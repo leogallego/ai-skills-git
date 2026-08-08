@@ -9,7 +9,11 @@ Discover only — do not hardcode project paths. Skip missing sources.
 
 1. Project instructions — `CLAUDE.md`, `AGENTS.md`, `.cursor/rules` (summarize)
 2. Global agent instructions — e.g. `~/.claude/CLAUDE.md` (git/PR/attribution bits)
-3. Architecture docs — `**/*architecture*/**/*.md` (cap volume; prefer index)
+3. Architecture docs — prefer `.git-pipeline.yml` → `architecture.contracts`
+   (default discover `docs/architecture/service-contracts.md`), then
+   `architecture.adr_dir` / `architecture.strategy` / `architecture.provider`
+   when set; else `**/*architecture*/**/*.md` (cap volume; prefer index).
+   Missing contracts are OK at foundation time — `git-review` bootstraps later.
 4. CI — `.github/workflows/*`, `.gitlab-ci.yml`, `Jenkinsfile`, `.circleci/`
 5. Manifests — `package.json`, `pyproject.toml`, `go.mod`, `Cargo.toml`,
    `build.gradle*`, `pom.xml`, …
@@ -26,10 +30,14 @@ Full skill bodies are loaded later via `git-assess` → `skills_needed` (not her
 
 ## Local skill index (discover, don’t preload)
 
-Scan **both** project and user skill roots (`**/skills`, `.cursor/skills`,
-`.claude/skills`, `~/.cursor/skills`, `~/.claude/skills`, host docs). Record
-`name` + one-line description for each. Matching later uses this combined
-index — project and user installs are equal candidates.
+Scan **both** project and user skill roots. Prefer the cross-client
+agentskills.io paths, then agent-specific trees:
+
+- Project: `.agents/skills`, `.cursor/skills`, `.claude/skills`, `**/skills`
+- User: `~/.agents/skills`, `~/.cursor/skills`, `~/.claude/skills`, host docs
+
+Record `name` + one-line description for each. Matching later uses this
+combined index — project and user installs are equal candidates.
 
 **Selection happens in `git-assess`:**
 

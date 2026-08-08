@@ -66,7 +66,9 @@ Comment with PR link. Labels (if enabled): remove `pipeline/in-progress`, add
 
 ### 6. PR review (optional / medium+)
 
-Same angles as `git-implement` review on the GitHub PR diff. Fix-now vs file
+Same angles as `git-implement` review on the PR/MR diff. **Architecture:**
+prefer `git-review` when in the skill index (contracts discovery + bootstrap).
+Other angles: `git-implement` / `reviewer-prompt.md`. Fix-now vs file
 follow-up issues (link in PR). Circuit breaker after 3 non-converging loops →
 report failure to caller.
 
@@ -93,6 +95,6 @@ Caller may ask to remove the worktree; if PR exists, keep worktree until merge
 
 ## Related skills
 
-- `git-closes`, `git-sandbox`, `git-worktree`
+- `git-closes`, `git-sandbox`, `git-worktree`, `git-review`
 - `git-implement` — prior phase
 - `git-issue`, `git-pipeline` — callers

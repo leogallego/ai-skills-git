@@ -39,9 +39,16 @@ test_commands: []
 lint_commands: []
 # Manual overrides: skill names always added to skills_needed when found
 # in the local index (user or project). Config wins — not stack-filtered.
-# Example (Python team that always wants PEP8 review when the skill exists):
-#   always_load_review_skills: [pep8-review]
+# Example: force architecture procedure + a stack pack when installed:
+#   always_load_review_skills: [git-review, pep8-review]
 always_load_review_skills: []
+# Architecture contract review (git-review). Paths optional — discovery
+# defaults to docs/architecture/service-contracts.md when omitted.
+architecture:
+  contracts: docs/architecture/service-contracts.md
+  # adr_dir: docs/architecture/adr/
+  # strategy: docs/architecture/project-strategy.md
+  # provider: docs/architecture/review-provider.md  # thin extras only
 claude_md_hash: ""
 # Tracker / PR API (default github). Plain git stays forge-agnostic.
 forge:
@@ -53,7 +60,15 @@ forge:
 each name that exists under project or user skill roots, **even if** it does
 not match the inferred stack. Auto-matched skills stay stack-filtered; only
 this list bypasses that filter. Do not list every installed pack — only what
-you intend to force.
+you intend to force. Prefer `git-review` here for architecture contract review
+(procedure in this pack; rules stay in the contracts file).
+
+**`architecture`:** optional. Used by `git-review` (and foundation) to find
+enforceable service contracts. When `contracts` is unset, discovery still
+checks `docs/architecture/service-contracts.md`. If no contracts file exists,
+`git-review` offers to scaffold one (confirm first) — it does not invent a
+Clean review. `provider` is optional thin extras (layer table / companion
+skill map) when keeping that out of the main contracts doc.
 
 **`stack_ci`:** how stacked PRs interact with CI (see `git-pipeline` §4).
 Default when unset: **`serial`** — only one ready/non-draft PR runs CI at a
