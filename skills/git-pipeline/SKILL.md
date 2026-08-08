@@ -10,7 +10,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.1.0"
+  version: "1.2.0"
   collection: workflow
 ---
 
@@ -71,34 +71,60 @@ Tooling: `git-sandbox`. Track run state (checklist / host tasks).
 | Assess | `git-assess` | Stop issue if outdated |
 | Plan | `git-plan` | Skip trivial/small |
 | Implement | `git-implement` | `branch=<type>/<n>-<slug>` |
-| PR | `git-pr` | **push-remote**; stack PR base when not first |
+| PR | `git-pr` | **push-remote**; stack PR base when not first — see **stack CI** |
 
 `base=` for implement: `<base-remote>/<default>` (first/standalone) or previous
 issue branch (later in chain).
 
+#### Stack CI (avoid rebuild cascades)
+
+When several stacked PRs all run CI, merging the first invalidates the rest
+(they need a rebase onto the new default). A chain of N PRs can trigger
+roughly N + (N−1) + … rebuilds. Mitigate with
+`stack_ci` in `.git-pipeline.yml` (default **`serial`**):
+
+| Mode | Behavior |
+|------|----------|
+| **`serial`** (default) | Implement the whole chain in worktrees if useful, but only **one** PR is “CI-active” at a time: open/ready the first; keep later PRs **unopened** or **draft** until the previous merges. After merge, refresh the next branch (below), then open/ready it and wait for CI. |
+| **`parallel`** | Open the full stack for review (old behavior). Expect CI thrash on each merge; still **must** rebase + re-green before merging each next PR. Use only when review latency matters more than CI cost. |
+
+Also prefer fewer wider PRs when CI is expensive. If the host has a **merge
+queue** that rebases automatically, prefer it and do not race manual merges.
+
 ### 5. Merge gate
 
 Present [completion-report.md](completion-report.md). Wait for human approval.
+Remind whether `stack_ci` is serial or parallel.
 
 ### 6. Sequential merge
 
 For each chain, in order:
 
-1. Invoke `git-pr` merge mechanics (API path if needed) for the **first** open
-   PR in the chain — while primary may still hold the default branch.
-2. **Retarget** the next stacked PR: set its base from the merged feature
-   branch to `<default-branch>` (GitHub: update PR `base`). Merge only after
-   the PR is mergeable against that new base (rebase/retarget conflicts →
-   fix in that issue’s worktree, do not reset primary).
-3. Repeat merge → retarget for the rest of the chain.
-4. Remove merged worktrees when safe; delete remote feature branches when
-   appropriate.
-5. `git fetch <base-remote>` between merges; ff-only update a **safe** default
-   worktree if you need local `main` — never steal primary from a peer.
+1. Invoke `git-pr` merge mechanics (API path if needed) for the **first**
+   CI-green PR — while primary may still hold the default branch.
+2. `git fetch <base-remote>` so local refs see the new default tip.
+3. **Refresh the next stacked branch** (required — retarget alone is not
+   enough):
+   - In that issue’s worktree: rebase (or merge) onto
+     `<base-remote>/<default-branch>` (or the new stack parent if mid-chain
+     still needs a non-default base).
+   - Push with `--force-with-lease` to **push-remote** (main session only).
+   - Set the PR `base` to `<default-branch>` when it should land on default
+     (GitHub: update PR base).
+   - Conflicts → fix in that worktree; do not reset primary.
+4. **Wait for required CI green on the refreshed tip.** Ignore CI results from
+   before the rebase — they are stale.
+5. Merge that PR via `git-pr`; repeat steps 2–5 for the rest of the chain.
+6. Under `stack_ci: serial`, open/undraft the next PR only at step 3–4 (not
+   before the previous merge).
+7. Remove merged worktrees when safe; delete remote feature branches when
+   appropriate. Ff-only update a **safe** default worktree if needed — never
+   steal primary from a peer.
 
 ### 7. Done
 
-Final report: merged / skipped / failed; deferred issue links.
+Final report: merged / skipped / failed; deferred issue links; note how many
+rebases/CI waits ran.
 
 ## Related skills
 

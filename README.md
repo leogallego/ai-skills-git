@@ -63,7 +63,7 @@ fetched the issue via GitHub.
 |------|-----|
 | Which remote is canonical / fork? | **`git-worktree` §0** (before any fetch/push) |
 | One issue | **`git-issue 123`** |
-| Many issues / stacks | **`git-pipeline #1 #2`** |
+| Many issues / stacks | **`git-pipeline #1 #2`** (`stack_ci: serial` avoids CI rebuild cascades) |
 | Sandbox / GPG broken | **`git-sandbox`** |
 | Wrong `Closes #N` / “Does not close #N” false positive | **`git-closes`** |
 | AI junk in `git status` | **`git-ignore-ai`** |

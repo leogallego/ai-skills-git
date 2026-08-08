@@ -30,6 +30,9 @@ version: 1
 default_branch: main
 branch_pattern: "<type>/<n>-<slug>"
 merge_method: merge   # or squash | rebase | detect
+# Stacked PRs + expensive CI: prefer serial (one CI-active PR at a time).
+# parallel = open full stack for review; expect rebuilds after each merge.
+stack_ci: serial      # serial | parallel
 labels: true          # pipeline/* labels
 attribution: "Assisted-by: …"
 test_commands: []
@@ -51,6 +54,12 @@ each name that exists under project or user skill roots, **even if** it does
 not match the inferred stack. Auto-matched skills stay stack-filtered; only
 this list bypasses that filter. Do not list every installed pack — only what
 you intend to force.
+
+**`stack_ci`:** how stacked PRs interact with CI (see `git-pipeline` §4).
+Default when unset: **`serial`** — only one ready/non-draft PR runs CI at a
+time; after merge, rebase the next onto the new default, push, wait for green,
+then merge. Set **`parallel`** only when simultaneous review of the whole
+stack is worth the rebuild cost.
 
 **`forge.provider`:** selects the issue/PR (or MR) API adapter used by
 `git-issue` / `git-pipeline` / `git-pr` / `git-closes` / `git-sandbox`. Default
