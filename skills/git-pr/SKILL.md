@@ -72,14 +72,19 @@ report failure to caller.
 
 ### 7. Single-PR merge (when asked)
 
-Wait for required CI green + mergeable. Prefer MCP/`gh` merge with method from
-`.git-pipeline.yml` (else detect, else `merge`). Delete remote feature branch
-when appropriate.
+Wait for required CI green + mergeable **on the current tip**. If a stack
+predecessor just merged, CI from before the rebase onto the new default is
+**stale** — `git-pipeline` must refresh the branch first; do not merge on old
+greens. Prefer MCP/`gh` merge with method from `.git-pipeline.yml` (else
+detect, else `merge`). Delete remote feature branch when appropriate.
 
 If merge fails because the default branch is checked out in another worktree:
 **merge via API** — do not checkout/reset the primary repo.
 
 Confirm merged state via API. Sync local default only in a safe worktree.
+
+Host **merge queues** (when enabled): prefer queue over racing several stack
+merges by hand.
 
 ### 8. Cleanup (no PR / skip / fail)
 
