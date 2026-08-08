@@ -1,11 +1,11 @@
 # Forge provider: Gitea / Forgejo
 
 Use when `forge.provider` is **`gitea`** or **`forgejo`**, or when inferred
-from the base-remote / issue URL (below). Forgejo is API-compatible with Gitea
-for the ops in this pack — treat them the same unless a host docs a difference.
+from the base-remote / issue URL (below). Load **only** this helper — not
+`forge-github.md` / `forge-gitlab.md`. Forgejo is API-compatible with Gitea
+for the ops in this pack unless the host documents a difference.
 
-Plain git (fetch/worktree/commit/push) is unchanged — this file covers
-**issue + pull-request API** only.
+Plain git is unchanged — this file covers **issue + pull-request API** only.
 
 ## Detect
 

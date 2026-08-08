@@ -1,8 +1,8 @@
 # Forge provider: GitLab
 
 Use when `forge.provider` is **`gitlab`**, or when inferred from the
-base-remote / issue URL (below). Plain git (fetch/worktree/commit/push) stays
-unchanged — this file covers **issue + merge-request API** only.
+base-remote / issue URL (below). Load **only** this helper for GitLab API
+details — not `forge-github.md` / `forge-gitea.md`. Plain git stays unchanged.
 
 ## Detect
 
