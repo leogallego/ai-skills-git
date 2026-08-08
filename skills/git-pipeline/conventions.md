@@ -34,8 +34,10 @@ labels: true          # pipeline/* labels
 attribution: "Assisted-by: …"
 test_commands: []
 lint_commands: []
-# Optional names always added to skills_needed when installed locally.
-# Still subject to stack relevance in git-assess — do not list every pack.
+# Manual overrides: skill names always added to skills_needed when found
+# in the local index (user or project). Config wins — not stack-filtered.
+# Example (Python team that always wants PEP8 review when the skill exists):
+#   always_load_review_skills: [pep8-review]
 always_load_review_skills: []
 claude_md_hash: ""
 # Tracker / PR API (default github). Plain git stays forge-agnostic.
@@ -43,6 +45,12 @@ forge:
   provider: github   # github | gitlab | gitea | forgejo | none
   # host / API base: omit to infer from base-remote URL when possible
 ```
+
+**`always_load_review_skills`:** operator-chosen list. `git-assess` must load
+each name that exists under project or user skill roots, **even if** it does
+not match the inferred stack. Auto-matched skills stay stack-filtered; only
+this list bypasses that filter. Do not list every installed pack — only what
+you intend to force.
 
 **`forge.provider`:** selects the issue/PR (or MR) API adapter used by
 `git-issue` / `git-pipeline` / `git-pr` / `git-closes` / `git-sandbox`. Default
