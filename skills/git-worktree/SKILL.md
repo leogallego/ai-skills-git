@@ -13,7 +13,7 @@ compatibility: >-
   Superpowers optional peer.
 metadata:
   author: Leonardo Gallego
-  version: "1.1.0"
+  version: "1.1.1"
   collection: workflow
 ---
 
@@ -204,7 +204,9 @@ primary tree — prefer
 
 ## Related skills
 
-- `git-issue` / `git-pipeline` — entries that require remotes + isolation
+- `git-issue` — single-issue entry (always runs §0 + isolation)
+- `git-pipeline` — batch entry (same; stacked `base=`)
 - `git-implement` — calls this with `base=` / `branch=`
+- `git-pr` — uses push-remote / base-remote from §0
 - `git-sandbox` — SSH remotes, push tooling
 - Superpowers `using-git-worktrees` — optional peer after remotes

@@ -2,7 +2,7 @@
 
 Migrate and rebuild [`issue-pipeline-skill`](../issue-pipeline-skill) into this pack as `git-*` skills. Two thin entry points share the same phase skills — no copied workflows.
 
-**Status:** M2 complete — M3 consistency / M4 retire source / M5 prove  
+**Status:** M3 complete — M4 source README pointed; M5 prove next  
 **Source:** `~/Claude/issue-pipeline-skill` (Apache-2.0)  
 **Target:** `~/Claude/ai-skills-git`
 
@@ -226,14 +226,14 @@ Commit after each completed M-step (and other significant edits). See CONTRIBUTI
 
 ### M3 — Consistency pass
 
-- [ ] Hard stops present on both entries; merge/partial detail only in `git-pr`
-- [ ] No pasted phase bodies in either entry
-- [ ] Symlinks refreshed
+- [x] Hard stops aligned on both entries; merge/partial detail deferred to `git-pr`
+- [x] No pasted phase bodies in either entry
+- [x] Symlinks refreshed
 
 ### M4 — Retire `issue-pipeline-skill`
 
-- [ ] README → `ai-skills-git` (`git-issue` / `git-pipeline`)
-- [ ] Remove old `issue-pipeline` user install
+- [x] README → `ai-skills-git` (`git-issue` / `git-pipeline`)
+- [x] Remove old `issue-pipeline` user install (none present under `~/.claude/skills/`)
 - [ ] Archive source when dry-runs pass
 
 ### M5 — Prove

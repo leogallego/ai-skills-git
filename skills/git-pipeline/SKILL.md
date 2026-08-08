@@ -10,7 +10,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.0.0"
+  version: "1.1.0"
   collection: workflow
 ---
 
@@ -18,8 +18,9 @@ metadata:
 
 ## Overview
 
-Batch / stacked orchestrator. Thin: sequences triage + phase skills; does not
-paste their bodies. Adapted from `issue-pipeline-skill` (see pack `NOTICE`).
+Batch / stacked orchestrator. **Thin** — sequences triage + phase skills; does
+not paste assess/plan/implement/PR bodies. Single-PR merge mechanics stay in
+`git-pr`; **this** skill owns merge gate, order, and worktree prune.
 
 Helpers: [foundation.md](foundation.md), [conventions.md](conventions.md),
 [triage-prompt.md](triage-prompt.md),
@@ -33,67 +34,66 @@ Helpers: [foundation.md](foundation.md), [conventions.md](conventions.md),
 
 ## Hard stops
 
-- `git-worktree` §0 remotes before any fetch/push; issue repos must match
-  **base-remote**.
-- Never edit primary checkout; never reuse peer worktrees/branches.
-- Subagents do not push (`git-sandbox`).
-- Collision STOP; partial progress / deferrals via `git-pr`.
-- Merge gate + sequential merge + worktree prune owned **here**.
+Shared with `git-issue` (policy only; mechanics live in linked skills):
+
+1. Remotes before any fetch/push — `git-worktree` §0; each issue `owner/repo`
+   must match **base-remote**.
+2. Never edit the primary checkout; never reuse a peer agent’s worktree/branch.
+3. Required isolation via `git-worktree` before implement edits.
+4. Verify `pwd` + branch before every commit/push.
+5. Collision with peer-owned / out-of-scope files → STOP and report.
+6. Subagents do not push — `git-sandbox`.
+7. Partial progress, `Closes`/`Fixes`, single-PR merge-via-API → **`git-pr`**.
+8. Multi-PR merge order + worktree cleanup after merge → **this skill** (call
+   `git-pr` per merge; never checkout/reset primary to merge).
 
 ## Instructions
 
 ### 1. Remotes
 
-Run `git-worktree` §0. Record `base-remote`, `push-remote`, default branch.
+`git-worktree` §0. Record `base-remote`, `push-remote`, default branch.
 
 ### 2. Foundation + conventions
 
-Follow [foundation.md](foundation.md) then [conventions.md](conventions.md).
+[foundation.md](foundation.md) then [conventions.md](conventions.md).
 
 ### 3. Triage
 
-Parse input numbers/URLs. Dispatch or run [triage-prompt.md](triage-prompt.md):
-fetch issues, deps, DAG, chains, skips, risk. Tooling via `git-sandbox`.
-
-Host-neutral run state: checklist of issues (pending / in progress / done /
-skipped / failed). Use host task APIs when available.
+Parse numbers/URLs. Run [triage-prompt.md](triage-prompt.md) (or subagent).
+Tooling: `git-sandbox`. Track run state (checklist / host tasks).
 
 ### 4. Per-issue loop
 
-For each issue in chain order (then standalones):
-
 | Step | Skill | Notes |
 |------|-------|-------|
-| Assess | `git-assess` | Skip remainder if outdated |
-| Plan | `git-plan` | Skip if trivial/small |
-| Implement | `git-implement` | `branch=<type>/<n>-<slug>`; `base=` default or prior branch |
-| PR | `git-pr` | Push to **push-remote**; stack base when not first |
+| Assess | `git-assess` | Stop issue if outdated |
+| Plan | `git-plan` | Skip trivial/small |
+| Implement | `git-implement` | `branch=<type>/<n>-<slug>` |
+| PR | `git-pr` | **push-remote**; stack PR base when not first |
 
-First in chain / standalone: `base=<base-remote>/<default-branch>`.  
-Later in chain: `base=<previous-issue-branch>`.
+`base=` for implement: `<base-remote>/<default>` (first/standalone) or previous
+issue branch (later in chain).
 
 ### 5. Merge gate
 
-After PRs exist: present [completion-report.md](completion-report.md). Wait for
-human approval (only required human checkpoint for merge).
+Present [completion-report.md](completion-report.md). Wait for human approval.
 
 ### 6. Sequential merge
 
-For each chain in order, merge PRs bottom-up or as stack requires:
+For each chain, in order:
 
-1. Call `git-pr` single-PR merge mechanics (API if needed).
-2. Update next stacked PR base if required.
-3. Remove worktrees for merged branches when safe.
-4. Fetch **base-remote** between merges.
-
-Do not checkout/reset the primary repo to merge.
+1. Invoke `git-pr` merge mechanics (API path if needed).  
+2. Retarget next stacked PR if required.  
+3. Remove merged worktrees when safe.  
+4. `git fetch <base-remote>` between merges.  
 
 ### 7. Done
 
-Final completion report: PRs merged/skipped/failed; deferred issue links.
+Final report: merged / skipped / failed; deferred issue links.
 
 ## Related skills
 
 - `git-issue` — single-issue entry
-- `git-worktree`, `git-assess`, `git-plan`, `git-implement`, `git-pr`
+- `git-worktree` — remotes + isolation
+- `git-assess` → `git-plan` → `git-implement` → `git-pr`
 - `git-sandbox`, `git-closes`
