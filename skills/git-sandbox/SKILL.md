@@ -11,7 +11,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.2.0"
+  version: "1.3.0"
   collection: sandbox
 ---
 
@@ -25,10 +25,8 @@ API** channels (default: **GitHub MCP**) still work. Use **git CLI** for local
 ops + transport; use the **active forge provider** for issue/PR/MR API ops.
 Avoid `gh` when the keyring is unreachable.
 
-**Forge provider** (from `.git-pipeline.yml` `forge.provider`, else infer from
-base-remote / issue URL, else **`github`**): see `git-pipeline` conventions.
-Unknown / unsupported → **STOP** before API calls; git fetch/commit/push may
-still proceed. Provider implementations beyond GitHub: Related to #1 / #4.
+**Forge provider** (resolve below). Unknown / unsupported → **STOP** before API
+calls; git fetch/commit/push may still proceed.
 
 Isolation and issue workflow live elsewhere: load `git-worktree` / `git-issue`.
 Verify close keywords with `git-closes`.
@@ -44,17 +42,31 @@ fine. Not a substitute for `git-worktree`.
 
 ## Instructions
 
+### Resolve forge provider
+
+1. `.git-pipeline.yml` → `forge.provider` if set  
+2. Else infer from issue/MR URL or **base-remote** host/path:
+   - GitHub → `github`
+   - Host/`gitlab.` or `/-/issues/` / `/-/merge_requests/` → `gitlab`
+   - Gitea/Forgejo signals → see forgejo/gitea provider (Related to #4)  
+3. Else default **`github`**
+4. Report briefly: `forge.provider=…` (+ host if non-default)
+
+| Provider | Load | API tools |
+|----------|------|-----------|
+| `github` | (default) | GitHub MCP; `gh` only if keyring works |
+| `gitlab` | [forge-gitlab.md](forge-gitlab.md) | `glab` and/or GitLab API / token env |
+| `gitea` / `forgejo` | Provider doc when present | Related to #4 — else STOP |
+| `none` / unknown | — | STOP API; git-only OK |
+
 ### Tool selection
 
 | Operation | Tool | Why |
 |-----------|------|-----|
 | commit / branch / diff / log / status | git CLI | Local (any forge) |
 | push / pull / fetch | git CLI (SSH remote) | Avoid HTTPS + broken helpers |
-| create/list/merge PRs/MRs, issues, reviews, search | **Active forge provider** | Own auth channel |
-| `forge.provider: github` (default) | GitHub MCP; `gh` only if keyring works | Sandbox-safe default |
-| `forge.provider: gitlab` / `gitea` / `forgejo` | Provider skill/CLI when implemented | Related to #1 / #4 — else STOP |
-| `forge.provider: none` or unknown | No issue/PR API | STOP; report git-only path |
-| `gh` CLI | Avoid in sandbox | Cannot read token from keyring |
+| create/list/merge PRs/MRs, issues, reviews, search | **Active forge provider** (table above) | Own auth channel |
+| `gh` CLI | Avoid in sandbox; GitHub-only | Keyring / wrong forge |
 
 ### Why `gh` fails
 
@@ -184,5 +196,6 @@ agents’ checkouts alone.
 
 - `git-worktree` — isolation mechanics
 - `git-issue` / `git-pipeline` — workflow entries
-- `git-pr` — push / PR / merge-via-API
+- `git-pr` — push / PR/MR / merge-via-API
 - `git-closes` — verify issue numbers before Closes/Fixes
+- [forge-gitlab.md](forge-gitlab.md) — GitLab provider details

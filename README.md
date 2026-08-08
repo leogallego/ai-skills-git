@@ -24,20 +24,18 @@ M5 prove complete on this repo. Apache-2.0. **Tracker/PR API is GitHub-first**
 ## Forge scope
 
 Plain **git** layers work against any remote (GitHub, GitLab, Gitea, Forgejo).
-Issue fetch, PR/MR open, review, merge-via-API, and `Closes` verify currently
-require **GitHub** (`gh` and/or GitHub MCP). Local Gitea / `gitlab.com` remotes
-are fine for worktree + push; `git-issue` / `git-pipeline` will fail or STOP
-when they need a non-GitHub tracker API.
+Issue/MR APIs use **`forge.provider`** (default `github`). **GitLab** is
+supported via `git-sandbox` → `forge-gitlab.md` (`glab` / API / token env).
+Gitea/Forgejo: Related to #4.
 
 | Layer | Off-GitHub today? | Skills |
 |-------|-------------------|--------|
 | Remotes, fetch, worktree, commit, push | Yes | `git-worktree`, most of `git-implement` |
-| Sandbox transport + SSH signing | Mostly (examples still say `github.com`) | `git-sandbox` |
-| Issues, PRs, labels, merge API, close verify | No — GitHub only | `git-issue`, `git-pipeline`, `git-assess`, `git-pr`, `git-closes` |
+| Sandbox transport + SSH signing | Yes (allowlist the forge host) | `git-sandbox` |
+| Issues, PRs/MRs, merge API, close verify | **GitHub** (default) or **GitLab** (`forge.provider: gitlab`) | entries + `git-pr` / `git-closes` via `git-sandbox` |
 
-Configure `forge.provider` in `.git-pipeline.yml` (default `github`) — see
-`git-pipeline` conventions and `git-sandbox`. Concrete adapters: Related to #1
-(GitLab), Related to #4 (Gitea/Forgejo).
+Configure `forge.provider` in `.git-pipeline.yml` — see conventions and
+`git-sandbox`.
 
 ## Skills
 
@@ -46,18 +44,17 @@ All names follow `git-<concern>` (see CONTRIBUTING).
 | Skill | Domain | Role | Forge |
 |-------|--------|------|-------|
 | `git-worktree` | Mechanics | Verify remotes (origin/upstream/fork), then isolate with `base=` / `branch=` | Portable |
-| `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) | GitHub API |
-| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge | GitHub API |
-| `git-assess` | Phase | Issue vs codebase assessment | GitHub API |
+| `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) | Active forge |
+| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge | Active forge |
+| `git-assess` | Phase | Issue vs codebase assessment | Active forge |
 | `git-plan` | Phase | Plan + plan review | Portable* |
 | `git-implement` | Phase | Worktree + implement + review + fix | Portable* |
-| `git-pr` | Phase | One PR + Closes + merge mechanics | GitHub API |
-| `git-sandbox` | Environment | git CLI vs GitHub MCP; SSH commit signing | Mixed |
+| `git-pr` | Phase | One PR/MR + Closes + merge mechanics | Active forge |
+| `git-sandbox` | Environment | git CLI vs forge API; SSH commit signing | Mixed |
 | `git-ignore-ai` | Hygiene | AI-aware `.gitignore` | Portable |
-| `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` | GitHub API |
+| `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` | Active forge |
 
-\*Plan/implement git mechanics are portable; they inherit GitHub when the caller
-fetched the issue via GitHub.
+\*Plan/implement git mechanics are portable; tracker ops use the active forge.
 
 | Need | Use |
 |------|-----|

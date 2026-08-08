@@ -60,8 +60,10 @@ Optional escape when you must mention a number near those verbs: write
 “issue N” **without** `#` and **without** a closing keyword adjacent (prefer
 the table above; cite GitHub docs if relying on this).
 
-Forge note: GitLab/Gitea/Forgejo close syntax may differ — see forge-portability
-issues; this skill’s false-positive rules are written for **GitHub**.
+Forge note: on **GitLab**, `Closes` / `Fixes` / `Resolves` still apply — use
+the same safe/unsafe wording and verify via the GitLab provider (`git-sandbox`
+helper `forge-gitlab.md` in that skill directory). Gitea / Forgejo: Related
+to #4.
 
 ## Instructions
 
