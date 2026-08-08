@@ -18,8 +18,8 @@ Pipeline migration: [PIPELINE_PLAN.md](PIPELINE_PLAN.md).
 
 ## Status
 
-M5 prove in progress. Apache-2.0. **Tracker/PR API is GitHub-first** (see
-[Forge scope](#forge-scope)).
+M5 prove complete on this repo. Apache-2.0. **Tracker/PR API is GitHub-first**
+(see [Forge scope](#forge-scope)).
 
 ## Forge scope
 
@@ -67,6 +67,7 @@ fetched the issue via GitHub.
 | Sandbox / GPG broken | **`git-sandbox`** |
 | Wrong `Closes #N` / “Does not close #N” false positive | **`git-closes`** |
 | AI junk in `git status` | **`git-ignore-ai`** |
+| Which language/domain skills to load? | **`git-assess`** maps locally installed skills to the project stack (Python vs Kotlin/Android vs …) — never force unrelated packs |
 
 ## Layout
 

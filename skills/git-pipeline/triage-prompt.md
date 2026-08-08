@@ -114,7 +114,10 @@ Execution Plan:
     #NNN: <reason>
 ```
 
-Include the risk level for each chain. All chains start from `main`. Within a chain, each subsequent issue branches from the previous issue's branch.
+Include the risk level for each chain. All chains start from
+`<base-remote>/<default-branch>` (from `git-worktree` §0 — never assume
+`main`). Within a chain, each subsequent issue branches from the previous
+issue's branch.
 
 ## Constraints
 

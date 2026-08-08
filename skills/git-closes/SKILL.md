@@ -33,7 +33,7 @@ choosing safe wording so a mention does **not** close an issue.
 
 **Not when:** linking an issue for context only without close keywords (still
 prefer a real URL or a safe phrase below). Partial progress PRs should not use
-`Closes` — see `git-issue`.
+`Closes` — see **`git-pr`** (entries only sequence into it).
 
 ## Closing keywords (GitHub)
 
@@ -76,7 +76,7 @@ issues; this skill’s false-positive rules are written for **GitHub**.
 3. If mismatch or ambiguity: **STOP** and ask the user. Do not guess.
 4. Only then use `Closes #<n>` or `Fixes #<n>`.
 5. For incomplete work: omit close keywords; write `Partial progress on #<n>`
-   and update the issue checklist (`git-issue`).
+   and update the issue checklist via **`git-pr`** / caller.
 6. Before finalizing any PR/commit body: scan for closing keywords next to
    `#N` (including negated forms). Rewrite unsafe phrases using the table.
 
@@ -91,6 +91,6 @@ issues; this skill’s false-positive rules are written for **GitHub**.
 
 ## Related skills
 
-- `git-issue` — when Closes vs partial progress applies
-- `git-pr` — PR body line after this skill
+- `git-pr` — owns Closes vs partial-progress line and PR body
+- `git-issue` / `git-pipeline` — entries that call `git-pr`
 - `git-sandbox` — API access when `gh` is broken in sandbox

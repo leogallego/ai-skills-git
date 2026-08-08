@@ -34,6 +34,8 @@ labels: true          # pipeline/* labels
 attribution: "Assisted-by: …"
 test_commands: []
 lint_commands: []
+# Optional names always added to skills_needed when installed locally.
+# Still subject to stack relevance in git-assess — do not list every pack.
 always_load_review_skills: []
 claude_md_hash: ""
 # Tracker / PR API (default github). Plain git stays forge-agnostic.

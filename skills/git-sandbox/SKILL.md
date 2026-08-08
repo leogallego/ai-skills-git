@@ -159,9 +159,10 @@ subagent cannot surface.
 ### After API merge
 
 MCP/API merge does not update local files. Sync safely without stealing the
-primary checkout from another agent — see `git-issue` merge steps. In a
-worktree that tracks the default branch: `git pull`. Otherwise `git fetch` and
-leave other agents’ checkouts alone.
+primary checkout from another agent — see **`git-pr`** (single-PR merge) and
+**`git-pipeline`** §6 (sequential stack merge / retarget). In a worktree that
+tracks the default branch: `git pull`. Otherwise `git fetch` and leave other
+agents’ checkouts alone.
 
 ## Failure modes
 
@@ -182,5 +183,6 @@ leave other agents’ checkouts alone.
 ## Related skills
 
 - `git-worktree` — isolation mechanics
-- `git-issue` — multi-agent issue process
+- `git-issue` / `git-pipeline` — workflow entries
+- `git-pr` — push / PR / merge-via-API
 - `git-closes` — verify issue numbers before Closes/Fixes

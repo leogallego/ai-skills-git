@@ -68,7 +68,7 @@ Build a **remote map** and record it for the session:
 
 | Role | How to choose |
 |------|----------------|
-| **Issue / base remote** | Remote whose URL `owner/repo` matches the GitHub issue (or user-stated canonical repo). Often `upstream` on a fork, else `origin`. |
+| **Issue / base remote** | Remote whose URL `owner/repo` matches the tracker issue (or user-stated canonical repo). Often `upstream` on a fork, else `origin`. |
 | **Push remote** | Where this clone may push feature branches. On a fork workflow: usually `origin` (fork). On a shared clone with write access to canonical: same as base remote. |
 | **Default branch** | `git remote show <base-remote>` → `HEAD branch`, or `main`/`master` from `refs/remotes/<base-remote>/HEAD`. |
 
