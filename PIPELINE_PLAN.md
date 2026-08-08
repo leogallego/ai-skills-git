@@ -2,7 +2,7 @@
 
 Migrate and rebuild [`issue-pipeline-skill`](../issue-pipeline-skill) into this pack as `git-*` skills. Two thin entry points share the same phase skills — no copied workflows.
 
-**Status:** M3 complete — M4 source README pointed; M5 prove next  
+**Status:** M4 local retire done — archive + GitHub push gated on M5 prove  
 **Source:** `~/Claude/issue-pipeline-skill` (Apache-2.0)  
 **Target:** `~/Claude/ai-skills-git`
 
@@ -232,16 +232,23 @@ Commit after each completed M-step (and other significant edits). See CONTRIBUTI
 
 ### M4 — Retire `issue-pipeline-skill`
 
-- [x] README → `ai-skills-git` (`git-issue` / `git-pipeline`)
+- [x] README → `ai-skills-git` (`git-issue` / `git-pipeline`) — commit `afa489a` on source repo
 - [x] Remove old `issue-pipeline` user install (none present under `~/.claude/skills/`)
-- [ ] Archive source when dry-runs pass
+- [x] New pack symlinked under `~/.claude/skills/` and `~/.cursor/skills/` (`git-*`)
+- [x] Push superseded README (`afa489a` on `origin/main`)
+- [ ] Archive / mark archived on GitHub when M5 dry-runs pass
+- [ ] Optional: remove leftover `~/.claude/skills/{ai-gitignore,sandbox-git-github}` dirs once comfortable
 
 ### M5 — Prove
 
-- [ ] `git-issue 123` → one PR from default branch
+Needs a GitHub `owner/repo` with write access + open issues (pack itself has **no remote** yet).
+
+- [ ] Publish `ai-skills-git` (or pick another prove target) and open 3 tiny issues
+- [ ] `git-issue <n>` → one PR from default branch
 - [ ] `git-pipeline` two dependent issues → stack + sequential merge
 - [ ] Sandbox MCP + no subagent push
 - [ ] Merge-via-API when primary holds default branch
+- [ ] Then: archive `issue-pipeline-skill` (M4 last checkbox)
 
 ---
 
