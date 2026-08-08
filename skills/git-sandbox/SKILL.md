@@ -1,17 +1,17 @@
 ---
 name: git-sandbox
 description: >-
-  Routes git and GitHub operations under restricted sandboxes that block
+  Routes git and forge API operations under restricted sandboxes that block
   AF_UNIX sockets and keyring access. Use when gh auth fails, GPG signing
   fails, git push stalls in sandbox, credential errors appear, or choosing
-  between git CLI, gh, and GitHub MCP. Does not own worktree creation (see
-  git-worktree) or issue process (see git-issue).
+  between git CLI and the active forge provider (default GitHub MCP). Does not
+  own worktree creation (see git-worktree) or issue process (see git-issue).
 license: Apache-2.0
 compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.1.0"
+  version: "1.2.0"
   collection: sandbox
 ---
 
@@ -20,13 +20,18 @@ metadata:
 ## Overview
 
 Restricted sandboxes often block `AF_UNIX` sockets. That breaks `gh` (keyring
-via D-Bus) and SSH agents, while **git over SSH** and **GitHub MCP** still work.
-Use **git CLI** for local ops + transport; use **GitHub MCP** (or another
-already-authenticated API channel) for PR/issue/API ops. Avoid `gh` when the
-keyring is unreachable.
+via D-Bus) and SSH agents, while **git over SSH** and authenticated **forge
+API** channels (default: **GitHub MCP**) still work. Use **git CLI** for local
+ops + transport; use the **active forge provider** for issue/PR/MR API ops.
+Avoid `gh` when the keyring is unreachable.
+
+**Forge provider** (from `.git-pipeline.yml` `forge.provider`, else infer from
+base-remote / issue URL, else **`github`**): see `git-pipeline` conventions.
+Unknown / unsupported → **STOP** before API calls; git fetch/commit/push may
+still proceed. Provider implementations beyond GitHub: Related to #1 / #4.
 
 Isolation and issue workflow live elsewhere: load `git-worktree` / `git-issue`.
-Verify `Closes #` with `git-closes`.
+Verify close keywords with `git-closes`.
 
 ## When to use / not
 
@@ -43,9 +48,12 @@ fine. Not a substitute for `git-worktree`.
 
 | Operation | Tool | Why |
 |-----------|------|-----|
-| commit / branch / diff / log / status | git CLI | Local |
+| commit / branch / diff / log / status | git CLI | Local (any forge) |
 | push / pull / fetch | git CLI (SSH remote) | Avoid HTTPS + broken helpers |
-| create/list/merge PRs, issues, reviews, search | GitHub MCP (or equivalent) | Own auth channel |
+| create/list/merge PRs/MRs, issues, reviews, search | **Active forge provider** | Own auth channel |
+| `forge.provider: github` (default) | GitHub MCP; `gh` only if keyring works | Sandbox-safe default |
+| `forge.provider: gitlab` / `gitea` / `forgejo` | Provider skill/CLI when implemented | Related to #1 / #4 — else STOP |
+| `forge.provider: none` or unknown | No issue/PR API | STOP; report git-only path |
 | `gh` CLI | Avoid in sandbox | Cannot read token from keyring |
 
 ### Why `gh` fails
@@ -56,11 +64,11 @@ those sockets → empty `Authorization` header → 401. The token is usually fin
 
 ### Required setup (project / user)
 
-1. **Remote URL must be SSH** (not HTTPS), e.g. `git@github.com:owner/repo.git`.
-   If `git remote set-url` cannot lock `.git/config`, edit the config file with
-   the editor tool instead.
-2. **Allowlist** `github.com` (and API host if needed) in the sandbox network
-   settings for the host product.
+1. **Remote URL must be SSH** (not HTTPS), e.g. `git@github.com:owner/repo.git`
+   or `git@gitlab.example:group/repo.git`. If `git remote set-url` cannot lock
+   `.git/config`, edit the config file with the editor tool instead.
+2. **Allowlist** the forge host (and API host if needed) in the sandbox network
+   settings — not only `github.com`.
 3. **Permit** git write commands in the host’s permission allowlist when
    required (`git commit`, `git push`, `git pull`, `git fetch`).
 4. **Commit signing — use SSH, not GPG** (see [Commit signing](#commit-signing-ssh-not-gpg) below).

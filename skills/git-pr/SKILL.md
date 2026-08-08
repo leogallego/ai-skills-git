@@ -53,7 +53,7 @@ per `git-sandbox`.
     link deferred issues
   - Never “Does not close #N” — GitHub still auto-closes (`git-closes`)
 
-API via MCP/`gh` (`git-sandbox`).
+API via the active forge provider (`git-sandbox`; default GitHub MCP/`gh`).
 
 ### 4. Review summary comment
 
