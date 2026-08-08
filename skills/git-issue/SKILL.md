@@ -59,9 +59,11 @@ Accept `#123`, `123`, or a full issue URL. If missing: **STOP** and ask.
    `github`) via `git-sandbox`. Unsupported → **STOP** (git-only still OK).
 3. Fetch issue through that provider. Closed/obsolete → STOP.
 4. Load `.git-pipeline.yml` if present (read only; no full infer/confirm).
-5. Load foundation **lightly** — [foundation.md](../git-pipeline/foundation.md)
-   (project instructions, manifests, local skill index). Full pipeline bootstrap
-   stays `git-pipeline`.
+5. Load foundation **lightly** (project instructions, manifests, local skill
+   index — same checklist as `git-pipeline`’s `foundation.md` in this pack).
+   Read that file from the pack’s `skills/git-pipeline/` directory when
+   installed together; do not use `../` links from this skill root. Full
+   pipeline bootstrap stays `git-pipeline`.
 
 ### 3. Phase sequence
 
