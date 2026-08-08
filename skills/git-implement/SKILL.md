@@ -31,7 +31,9 @@ Prompts: [implementer-prompt.md](implementer-prompt.md),
 1. Ensure remote map exists (`git-worktree` §0).
 2. Follow `git-worktree` with caller `branch=` and `base=` — **required**
    isolation. `git-issue`: base = `<base-remote>/<default>`. `git-pipeline`
-   chain: later issues use previous issue branch as `base=`.
+   chain: later issues use previous issue branch as `base=`. If Cursor
+   `move_agent_to_root` fails (default branch already checked out in
+   primary), keep editing via the worktree path — see `git-worktree` §4a.
 
 ### 2. Implement
 

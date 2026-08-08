@@ -84,10 +84,17 @@ Present [completion-report.md](completion-report.md). Wait for human approval.
 
 For each chain, in order:
 
-1. Invoke `git-pr` merge mechanics (API path if needed).  
-2. Retarget next stacked PR if required.  
-3. Remove merged worktrees when safe.  
-4. `git fetch <base-remote>` between merges.  
+1. Invoke `git-pr` merge mechanics (API path if needed) for the **first** open
+   PR in the chain — while primary may still hold the default branch.
+2. **Retarget** the next stacked PR: set its base from the merged feature
+   branch to `<default-branch>` (GitHub: update PR `base`). Merge only after
+   the PR is mergeable against that new base (rebase/retarget conflicts →
+   fix in that issue’s worktree, do not reset primary).
+3. Repeat merge → retarget for the rest of the chain.
+4. Remove merged worktrees when safe; delete remote feature branches when
+   appropriate.
+5. `git fetch <base-remote>` between merges; ff-only update a **safe** default
+   worktree if you need local `main` — never steal primary from a peer.
 
 ### 7. Done
 
