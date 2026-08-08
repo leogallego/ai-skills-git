@@ -10,7 +10,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.0.0"
+  version: "1.1.0"
   collection: workflow
 ---
 
@@ -62,11 +62,31 @@ Significant premise invalid → **skip**: comment why, return
 | medium | 5–15 files, new module or significant refactor |
 | large | 15+ files, architectural changes, multiple test types |
 
-### 5. Skill mapping
+### 5. Skill mapping (local, stack-relevant only)
 
-Build or reuse a skill index (`**/skills/*/SKILL.md` frontmatter name +
-description). Match by relevance to likely touched paths — no hardcoded globs.
-Record skills for plan/implement.
+**Goal:** load skills that help *this* repo and issue — not every skill on the
+machine.
+
+1. **Discover locally available skills** (union; skip missing roots):
+   - Project: `**/skills/*/SKILL.md`, `.cursor/skills/**`, `.claude/skills/**`
+   - User/host installs: `~/.cursor/skills/**`, `~/.claude/skills/**` (follow
+     symlinks; use the target `SKILL.md`)
+   - Other agent skill roots the host documents (Lola, Claude plugins, …)
+2. **Index lightly:** frontmatter `name` + `description` (first ~15–30 lines).
+   Do not hardcode pack names or language lists as required installs.
+3. **Infer project stack** from foundation/manifests (examples, not exclusive):
+   - Python → `pyproject.toml` / `setup.cfg` / `requirements*.txt`
+   - Kotlin / Android → `*.gradle*` / `settings.gradle*` / `AndroidManifest.xml`
+   - TypeScript/JS → `package.json` / `tsconfig*.json`
+   - Go / Rust → `go.mod` / `Cargo.toml`
+   - Plus paths the issue will touch
+4. **Select `skills_needed`:** match index entries whose descriptions/names fit
+   the stack **and** likely touched paths (e.g. Python PEP/testing skills on a
+   Python change; Kotlin/Android skills on Android UI work). Include
+   `always_load_review_skills` from `.git-pipeline.yml` when set.
+5. **Do not force unrelated skills** — skip packs for other ecosystems even if
+   installed locally. Prefer fewer, on-point skills over a full dump.
+6. Record the chosen names (and briefly why) for `git-plan` / `git-implement`.
 
 ### 6. On-demand context
 

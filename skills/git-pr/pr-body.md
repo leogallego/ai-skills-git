@@ -14,8 +14,8 @@
 
 ## Review findings addressed
 
-- **Plan review (Phase 3.5)**: {{plan_review_findings}}
-- **Implementation review (Phase 5)**: {{implementation_review_findings}}
+- **Plan review** (`git-plan`): {{plan_review_findings}}
+- **Implementation review** (`git-implement`): {{implementation_review_findings}}
 
 ## Acknowledged debt
 

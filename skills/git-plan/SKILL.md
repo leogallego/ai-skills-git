@@ -9,7 +9,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.0.0"
+  version: "1.1.0"
   collection: workflow
 ---
 
@@ -25,7 +25,9 @@ Plan + plan review before code. Adapted from `issue-pipeline-skill` Phases 3–4
 
 ### 1. Load skills
 
-Read full `SKILL.md` for every name in assess `skills_needed`.
+Read full `SKILL.md` for every name in assess `skills_needed` (already
+filtered to the project stack — see `git-assess` skill mapping). Do **not**
+load unrelated local skills.
 
 ### 2. Generate plan
 
@@ -56,10 +58,12 @@ Slug from title: lowercase, hyphens, max 40 chars.
 
 ### 5. Large-issue decomposition
 
-If large (15+ files / natural seams): split into sequential tasks (internal
-stack). Each task: `branch=<type>/<n>-task-<T>-<slug>`, base = previous task
-branch; PRs use `Part of #N` except last (`Closes #N` via `git-closes`).
-Caller (`git-pipeline` / `git-issue`) runs implement→pr per task.
+If large (15+ files / natural seams), **caller decides stacking**:
+
+| Caller | Decomposition |
+|--------|----------------|
+| **`git-issue`** | **No stacked PRs.** One branch from `<base-remote>/<default-branch>`; sequential commits (and optional plan task list) in a **single** PR. If the user needs multiple PRs for one issue, stop and recommend `git-pipeline` (or split follow-up issues). |
+| **`git-pipeline`** | May split into sequential tasks (internal stack): each task `branch=<type>/<n>-task-<T>-<slug>`, `base=` = previous task branch; intermediate PRs use `Part of #N` (safe wording — `git-closes`); last uses `Closes #N` after verify. Caller runs implement→pr per task and **merge retarget** (`git-pipeline` §6). |
 
 ### 6. Plan review
 

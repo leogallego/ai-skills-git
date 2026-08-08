@@ -37,6 +37,8 @@ Prompts: [implementer-prompt.md](implementer-prompt.md),
 
 ### 2. Implement
 
+- Load assess `skills_needed` (and plan-loaded skills) — stack-relevant only;
+  do not pull in unrelated local packs (`git-assess` §5).
 - Fast path (no plan): implement from assess `brief` + acceptance criteria.
 - With plan: dispatch implementer using `implementer-prompt.md` (single
   subagent for trivial/small; optional parallel units for medium/large **in

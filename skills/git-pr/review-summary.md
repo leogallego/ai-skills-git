@@ -1,10 +1,10 @@
 ## Review Summary (automated)
 
-### Plan Review (Phase 3.5)
+### Plan Review (`git-plan`)
 
 {{plan_review_section}}
 
-### Implementation Review (Phase 5)
+### Implementation Review (`git-implement`)
 
 #### Architecture
 

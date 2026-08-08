@@ -141,7 +141,7 @@ Commit after every significant change. At minimum, **one commit per completed PI
 - [x] M3 consistency (entry hard stops; thin orchestrators)
 - [x] M4 source README superseded banner (`issue-pipeline-skill`)
 - [ ] Remove old `~/.claude/skills/{ai-gitignore,sandbox-git-github,issue-pipeline}` when ready
-- [ ] M5 prove on this repo (`git-issue` / stacked `git-pipeline`)
+- [x] M5 prove on this repo (`git-issue` / stacked `git-pipeline`)
 - [x] GitHub remote (`origin` → `leogallego/ai-skills-git`)
 
 **Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`). Pack license: Apache-2.0.

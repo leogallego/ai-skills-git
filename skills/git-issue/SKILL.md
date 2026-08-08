@@ -10,7 +10,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.2.0"
+  version: "1.2.1"
   collection: workflow
 ---
 
@@ -59,13 +59,16 @@ Accept `#123`, `123`, or a full issue URL. If missing: **STOP** and ask.
    `github`) via `git-sandbox`. Unsupported → **STOP** (git-only still OK).
 3. Fetch issue through that provider. Closed/obsolete → STOP.
 4. Load `.git-pipeline.yml` if present (read only; no full infer/confirm).
+5. Load foundation **lightly** — [foundation.md](../git-pipeline/foundation.md)
+   (project instructions, manifests, local skill index). Full pipeline bootstrap
+   stays `git-pipeline`.
 
 ### 3. Phase sequence
 
-1. `git-assess` — pass payload  
+1. `git-assess` — pass payload (maps **stack-relevant** local skills)  
 2. `git-plan` — medium/large only; skip trivial/small  
 3. `git-implement` — `branch=<type>/<n>-<slug>`,
-   `base=<base-remote>/<default-branch>` (never stacked)  
+   `base=<base-remote>/<default-branch>` (never stacked; one PR only)  
 4. `git-pr` — push-remote; one PR  
 
 ### 4. Done
