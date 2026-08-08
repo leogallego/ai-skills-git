@@ -18,24 +18,44 @@ Pipeline migration: [PIPELINE_PLAN.md](PIPELINE_PLAN.md).
 
 ## Status
 
-M2 phase port complete (assess/plan/implement/pr/pipeline). Apache-2.0.
+M5 prove in progress. Apache-2.0. **Tracker/PR API is GitHub-first** (see
+[Forge scope](#forge-scope)).
+
+## Forge scope
+
+Plain **git** layers work against any remote (GitHub, GitLab, Gitea, Forgejo).
+Issue fetch, PR/MR open, review, merge-via-API, and `Closes` verify currently
+require **GitHub** (`gh` and/or GitHub MCP). Local Gitea / `gitlab.com` remotes
+are fine for worktree + push; `git-issue` / `git-pipeline` will fail or STOP
+when they need a non-GitHub tracker API.
+
+| Layer | Off-GitHub today? | Skills |
+|-------|-------------------|--------|
+| Remotes, fetch, worktree, commit, push | Yes | `git-worktree`, most of `git-implement` |
+| Sandbox transport + SSH signing | Mostly (examples still say `github.com`) | `git-sandbox` |
+| Issues, PRs, labels, merge API, close verify | No — GitHub only | `git-issue`, `git-pipeline`, `git-assess`, `git-pr`, `git-closes` |
+
+Follow-ups: Related to #3 (provider abstraction), #1 (GitLab), #4 (Gitea/Forgejo).
 
 ## Skills
 
 All names follow `git-<concern>` (see CONTRIBUTING).
 
-| Skill | Domain | Role |
-|-------|--------|------|
-| `git-worktree` | Mechanics | Verify remotes (origin/upstream/fork), then isolate with `base=` / `branch=` |
-| `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) |
-| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge |
-| `git-assess` | Phase | Issue vs codebase assessment |
-| `git-plan` | Phase | Plan + plan review |
-| `git-implement` | Phase | Worktree + implement + review + fix |
-| `git-pr` | Phase | One PR + Closes + merge mechanics |
-| `git-sandbox` | Environment | git CLI vs GitHub MCP; SSH commit signing |
-| `git-ignore-ai` | Hygiene | AI-aware `.gitignore` |
-| `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` |
+| Skill | Domain | Role | Forge |
+|-------|--------|------|-------|
+| `git-worktree` | Mechanics | Verify remotes (origin/upstream/fork), then isolate with `base=` / `branch=` | Portable |
+| `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) | GitHub API |
+| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge | GitHub API |
+| `git-assess` | Phase | Issue vs codebase assessment | GitHub API |
+| `git-plan` | Phase | Plan + plan review | Portable* |
+| `git-implement` | Phase | Worktree + implement + review + fix | Portable* |
+| `git-pr` | Phase | One PR + Closes + merge mechanics | GitHub API |
+| `git-sandbox` | Environment | git CLI vs GitHub MCP; SSH commit signing | Mixed |
+| `git-ignore-ai` | Hygiene | AI-aware `.gitignore` | Portable |
+| `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` | GitHub API |
+
+\*Plan/implement git mechanics are portable; they inherit GitHub when the caller
+fetched the issue via GitHub.
 
 | Need | Use |
 |------|-----|

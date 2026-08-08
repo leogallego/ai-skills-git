@@ -111,6 +111,20 @@ grep -q "^name: $(basename skills/<name>)$" skills/<name>/SKILL.md
 | AI `.gitignore` | `git-ignore-ai` |
 | `Closes #` verify | `git-closes` |
 
+## Forge scope (GitHub-first)
+
+**GitHub-first** for tracker and pull-request APIs. Do not document or implement
+entry skills as if Gitea/GitLab worked end-to-end until a forge provider lands
+(Related to #3, then #1 / #4).
+
+| Portable (plain git) | GitHub-bound today |
+|----------------------|--------------------|
+| `git-worktree`, `git-ignore-ai`, commit/push via `git-sandbox` | `git-issue`, `git-pipeline`, `git-assess`, `git-pr`, `git-closes` |
+
+When authoring: keep remote/worktree text forge-agnostic; put `gh` / GitHub MCP
+behind an explicit provider note (default: GitHub). Unknown forge → STOP and
+say what still works (git-only).
+
 ## Commits
 
 Commit after every significant change. At minimum, **one commit per completed PIPELINE_PLAN milestone (M0, M1, …)** and after substantive skill/doc edits (e.g. sandbox signing guidance). Prefer SSH commit signing (`git-sandbox`); never skip signing.
@@ -127,7 +141,7 @@ Commit after every significant change. At minimum, **one commit per completed PI
 - [x] M3 consistency (entry hard stops; thin orchestrators)
 - [x] M4 source README superseded banner (`issue-pipeline-skill`)
 - [ ] Remove old `~/.claude/skills/{ai-gitignore,sandbox-git-github,issue-pipeline}` when ready
-- [ ] M5 prove on a real repo
-- [ ] GitHub remote when asked
+- [ ] M5 prove on this repo (`git-issue` / stacked `git-pipeline`)
+- [x] GitHub remote (`origin` → `leogallego/ai-skills-git`)
 
 **Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`). Pack license: Apache-2.0.
