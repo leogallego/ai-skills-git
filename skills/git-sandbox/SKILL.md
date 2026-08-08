@@ -11,7 +11,7 @@ compatibility: >-
   Agentskills.io clients (Cursor, Claude Code, …). Optional Lola install.
 metadata:
   author: Leonardo Gallego
-  version: "1.3.0"
+  version: "1.4.0"
   collection: sandbox
 ---
 
@@ -45,10 +45,11 @@ fine. Not a substitute for `git-worktree`.
 ### Resolve forge provider
 
 1. `.git-pipeline.yml` → `forge.provider` if set  
-2. Else infer from issue/MR URL or **base-remote** host/path:
+2. Else infer from issue/MR/PR URL or **base-remote** host/path:
    - GitHub → `github`
    - Host/`gitlab.` or `/-/issues/` / `/-/merge_requests/` → `gitlab`
-   - Gitea/Forgejo signals → see forgejo/gitea provider (Related to #4)  
+   - `gitea` / `forgejo` in host, or non-GH/GL forge with `/issues/` `/pulls/`
+     → `gitea` or `forgejo` (ask if ambiguous)
 3. Else default **`github`**
 4. Report briefly: `forge.provider=…` (+ host if non-default)
 
@@ -56,7 +57,7 @@ fine. Not a substitute for `git-worktree`.
 |----------|------|-----------|
 | `github` | (default) | GitHub MCP; `gh` only if keyring works |
 | `gitlab` | [forge-gitlab.md](forge-gitlab.md) | `glab` and/or GitLab API / token env |
-| `gitea` / `forgejo` | Provider doc when present | Related to #4 — else STOP |
+| `gitea` / `forgejo` | [forge-gitea.md](forge-gitea.md) | `tea` and/or REST `/api/v1` + token |
 | `none` / unknown | — | STOP API; git-only OK |
 
 ### Tool selection
@@ -199,3 +200,4 @@ agents’ checkouts alone.
 - `git-pr` — push / PR/MR / merge-via-API
 - `git-closes` — verify issue numbers before Closes/Fixes
 - [forge-gitlab.md](forge-gitlab.md) — GitLab provider details
+- [forge-gitea.md](forge-gitea.md) — Gitea / Forgejo provider details

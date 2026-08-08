@@ -24,15 +24,19 @@ M5 prove complete on this repo. Apache-2.0. **Tracker/PR API is GitHub-first**
 ## Forge scope
 
 Plain **git** layers work against any remote (GitHub, GitLab, Gitea, Forgejo).
-Issue/MR APIs use **`forge.provider`** (default `github`). **GitLab** is
-supported via `git-sandbox` → `forge-gitlab.md` (`glab` / API / token env).
-Gitea/Forgejo: Related to #4.
+Issue/PR/MR APIs use **`forge.provider`** (default `github`):
 
-| Layer | Off-GitHub today? | Skills |
-|-------|-------------------|--------|
+| Provider | Skill doc | Tools |
+|----------|-----------|--------|
+| `github` (default) | `git-sandbox` | GitHub MCP / `gh` |
+| `gitlab` | `forge-gitlab.md` | `glab` / GitLab API |
+| `gitea` / `forgejo` | `forge-gitea.md` | `tea` / REST `/api/v1` |
+
+| Layer | Portable? | Skills |
+|-------|-----------|--------|
 | Remotes, fetch, worktree, commit, push | Yes | `git-worktree`, most of `git-implement` |
 | Sandbox transport + SSH signing | Yes (allowlist the forge host) | `git-sandbox` |
-| Issues, PRs/MRs, merge API, close verify | **GitHub** (default) or **GitLab** (`forge.provider: gitlab`) | entries + `git-pr` / `git-closes` via `git-sandbox` |
+| Issues, PRs/MRs, merge API, close verify | Via active forge provider | entries + `git-pr` / `git-closes` |
 
 Configure `forge.provider` in `.git-pipeline.yml` — see conventions and
 `git-sandbox`.

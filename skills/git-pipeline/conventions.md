@@ -65,8 +65,8 @@ stack is worth the rebuild cost.
 `git-issue` / `git-pipeline` / `git-pr` / `git-closes` / `git-sandbox`. Default
 when unset: **`github`**. `none` = git-only (STOP before issue/PR API steps).
 Unsupported or unknown provider → **STOP** and report what still works
-(remotes/worktree/commit/push). **`gitlab`:** see `git-sandbox` /
-`forge-gitlab.md`. **`gitea` / `forgejo`:** Related to #4.
+(remotes/worktree/commit/push). **`gitlab`:** `git-sandbox` /
+`forge-gitlab.md`. **`gitea` / `forgejo`:** `git-sandbox` / `forge-gitea.md`.
 
 `git-issue` loads this file when present; full infer/confirm is
 `git-pipeline`’s job.

@@ -61,9 +61,9 @@ Optional escape when you must mention a number near those verbs: write
 the table above; cite GitHub docs if relying on this).
 
 Forge note: on **GitLab**, `Closes` / `Fixes` / `Resolves` still apply — use
-the same safe/unsafe wording and verify via the GitLab provider (`git-sandbox`
-helper `forge-gitlab.md` in that skill directory). Gitea / Forgejo: Related
-to #4.
+the same safe/unsafe wording and verify via `git-sandbox` helper
+`forge-gitlab.md`. On **Gitea / Forgejo**, same wording + verify via
+`forge-gitea.md`.
 
 ## Instructions
 
