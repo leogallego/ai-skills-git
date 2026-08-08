@@ -16,10 +16,15 @@ Development guide for this pack: naming, authoring, candidate evaluation, and ne
 
 | Skill | Domain | Job |
 |-------|--------|-----|
-| `git-worktree` | Mechanics | Detect/create worktree + branch; move agent root; verify location |
-| `git-issue` | Process | Multi-agent issue workflow (preflight → isolation → PR → merge) |
-| `git-sandbox` | Environment | Tool routing under restricted sandboxes (git CLI vs GitHub MCP) |
-| `git-ignore-ai` | Hygiene | Baseline + update loop for AI-aware `.gitignore` |
+| `git-worktree` | Mechanics | Verify remotes; create worktree with `base=` / `branch=` |
+| `git-issue` | Entry | Single issue number → phase sequence (no stack) |
+| `git-pipeline` | Entry | Batch triage, stacks, sequential merge |
+| `git-assess` | Phase | Issue vs codebase assessment |
+| `git-plan` | Phase | Plan + plan review |
+| `git-implement` | Phase | Isolate + implement + review + fix |
+| `git-pr` | Phase | One PR, Closes, single-PR merge |
+| `git-sandbox` | Environment | Tool routing + SSH commit signing |
+| `git-ignore-ai` | Hygiene | AI-aware `.gitignore` |
 | `git-closes` | Hygiene | Confirm issue number before `Closes` / `Fixes` |
 
 Do not invent unprefixed or mixed-family names (`ai-gitignore`, `parallel-issue-work`, `sandbox-git-github`).
@@ -69,11 +74,12 @@ Keep Claude-only keys under `metadata.claude-*` (not top-level).
 
 **`git-worktree` procedure order:**
 
-1. Detect existing isolation (already in a linked worktree → don’t nest)
-2. Prefer native host tools (Cursor `move_agent_to_root` / worktree helpers, Claude `EnterWorktree`, …)
-3. Else `git worktree add` fallback (project convention for path; ensure ignored)
-4. Verify `pwd` and `git branch --show-current` before any edits
-5. If Superpowers `using-git-worktrees` is already in context, follow that instead of re-deriving steps
+1. **Verify remotes** — map base-remote vs push-remote (fork/upstream); never assume `origin`
+2. Detect existing isolation (already in a linked worktree → don’t nest)
+3. Prefer native host tools (Cursor `move_agent_to_root` / worktree helpers, Claude `EnterWorktree`, …)
+4. Else `git worktree add` fallback (`base=` ref; path ignored)
+5. Verify `pwd` and `git branch --show-current` before any edits
+6. If Superpowers `using-git-worktrees` is already in context, defer isolation mechanics after remotes
 
 **Validate:**
 
@@ -88,31 +94,22 @@ grep -q "^name: $(basename skills/<name>)$" skills/<name>/SKILL.md
 |--------|---------|
 | `~/.claude/skills/ai-gitignore` | → **`git-ignore-ai`** (one job; light path genericizing) |
 | `~/.claude/skills/sandbox-git-github` | Kitchen sink → split (table below) |
-| Isolation preamble (paste) | → **`git-issue`** (+ `prompt-template.md`); worktree steps → **`git-worktree`** |
-| Superpowers `using-git-worktrees` | Optional peer — pack ships **`git-worktree`** so install is not required |
-
-### Split of `sandbox-git-github`
-
-| Section | Home |
-|---------|------|
-| Tool selection, `gh`/AF_UNIX, SSH, signing, push stalls | **`git-sandbox`** |
-| Always use worktrees (full procedure) | **`git-worktree`** |
-| Never work on main / multi-agent isolation | **`git-issue`** |
-| Verify issue # before `Closes` | **`git-closes`** |
-| Worktree + Python `pythonpath` | Short note inside **`git-worktree`** or **`git-issue`** (optional later extract) |
-| Post-merge local sync | Fold into **`git-issue`** merge steps |
+| Isolation preamble (paste) | → hard stops on entries; worktree → **`git-worktree`** |
+| `issue-pipeline-skill` | → **`git-pipeline`** + phase skills (see PIPELINE_PLAN) |
+| Superpowers `using-git-worktrees` | Optional peer after remotes verified |
 
 ### Ownership (normative home)
 
 | Concern | Owner |
 |---------|-------|
-| Create / enter worktree | **`git-worktree`** (defer to Superpowers only if already loaded) |
-| Don’t edit primary / issue preflight / collision STOP / merge-via-API | `git-issue` |
-| Sandbox tool route | `git-sandbox` |
+| Remote map (origin / upstream / fork) | **`git-worktree` §0** (entries must run before fetch/push) |
+| Create / enter worktree (`base=`, `branch=`) | **`git-worktree`** |
+| Single-issue entry | `git-issue` |
+| Batch / stack / merge sequence | `git-pipeline` |
+| Assess / plan / implement / one PR | `git-assess` / `git-plan` / `git-implement` / `git-pr` |
+| Sandbox tool route + SSH signing | `git-sandbox` |
 | AI `.gitignore` | `git-ignore-ai` |
 | `Closes #` verify | `git-closes` |
-
-Out of v1 as standalone skills: post-merge sync, Python worktree env (too thin).
 
 ## Commits
 
@@ -125,7 +122,9 @@ Commit after every significant change. At minimum, **one commit per completed PI
 - [x] Implement `skills/git-{worktree,issue,sandbox,ignore-ai,closes}/`
 - [x] Validate with `skills-ref`; Cursor + Claude skill symlinks installed
 - [x] Initial commit on `main`
-- [ ] Retire old `~/.claude/skills/{ai-gitignore,sandbox-git-github}` (still present — remove when ready)
+- [x] M1 skeleton (stubs, `git-issue` rewrite, remotes in `git-worktree`)
+- [ ] M2 port phase content from `issue-pipeline-skill`
+- [ ] Retire old `~/.claude/skills/{ai-gitignore,sandbox-git-github,issue-pipeline}` when ready
 - [ ] GitHub remote when asked
 
 **Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`). Pack license: Apache-2.0.

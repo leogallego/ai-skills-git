@@ -2,7 +2,7 @@
 
 Migrate and rebuild [`issue-pipeline-skill`](../issue-pipeline-skill) into this pack as `git-*` skills. Two thin entry points share the same phase skills — no copied workflows.
 
-**Status:** planning (M0 defaults locked below)  
+**Status:** M1 complete — M2 port next  
 **Source:** `~/Claude/issue-pipeline-skill` (Apache-2.0)  
 **Target:** `~/Claude/ai-skills-git`
 
@@ -94,6 +94,7 @@ git-issue 123                    git-pipeline #1 #2 #3
 | One PR + Closes + single merge call | `git-pr` |
 | Tool choice under sandbox | `git-sandbox` only |
 | Peer-agent collision / partial progress / deferred issues | Entry policy (`git-issue` / `git-pipeline`) + wording in `git-pr` |
+| Remote map (canonical vs fork / origin vs upstream) | **`git-worktree` §0** — entries run before any fetch/push |
 
 ---
 
@@ -206,12 +207,12 @@ Commit after each completed M-step (and other significant edits). See CONTRIBUTI
 
 ### M1 — Skeleton
 
-- [ ] Stubs: `git-{pipeline,assess,plan,implement,pr}/`
-- [ ] Rewrite `git-issue` stub as number-first thin entry; remove `prompt-template.md`
+- [x] Stubs: `git-{pipeline,assess,plan,implement,pr}/`
+- [x] Rewrite `git-issue` as number-first thin entry; remove `prompt-template.md`
 - [x] `NOTICE` + Apache-2.0 `LICENSE`
-- [ ] README + CONTRIBUTING skill tables
-- [ ] Warn about old `issue-pipeline` / `sandbox-git-github` / `ai-gitignore` installs
-- [ ] Extend `git-worktree` (`base=`, `branch=`, pipeline/issue callers)
+- [x] README + CONTRIBUTING skill tables
+- [x] Warn about old `issue-pipeline` / `sandbox-git-github` / `ai-gitignore` installs
+- [x] Extend `git-worktree` (`base=`, `branch=`, callers) + **remote verification** (origin/upstream/fork)
 
 ### M2 — Port (order)
 

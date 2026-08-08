@@ -1,21 +1,24 @@
 # ai-skills-git
 
-Portable **git / GitHub agent skills** for worktrees, multi-agent issue work, sandbox tool routing, and AI-aware ignore hygiene.
+Portable **git / GitHub agent skills** for remotes-aware worktrees, single-issue
+and multi-issue pipelines, sandbox tool routing, and AI-aware ignore hygiene.
 
 - **Format:** [agentskills.io](https://agentskills.io/specification) (`skills/<name>/SKILL.md`)
 - **Install:** [Lola](https://github.com/LobsterTrap/lola), Cursor skill symlinks, or Claude Code plugin
 - **Peers:** [`ai-skills-python`](../ai-skills-python), [Superpowers](https://github.com/obra/superpowers) (optional)
 
-This pack is **standalone**. If Superpowers is installed, prefer its worktree skill when already loaded; otherwise use **`git-worktree`**.
+This pack is **standalone**. If Superpowers is installed, prefer its worktree
+skill when already loaded (after **remote verification**); otherwise use
+**`git-worktree`**.
 
-Development (naming, authoring): [CONTRIBUTING.md](CONTRIBUTING.md).  
-Pipeline migration from `issue-pipeline-skill`: [PIPELINE_PLAN.md](PIPELINE_PLAN.md).
+Development: [CONTRIBUTING.md](CONTRIBUTING.md).  
+Pipeline migration: [PIPELINE_PLAN.md](PIPELINE_PLAN.md).
 
 ---
 
 ## Status
 
-v1 skills implemented under `skills/`. Install helpers ready; publish/remote optional.
+M1 skeleton in place (phase skills stubbed; port content in M2). Apache-2.0.
 
 ## Skills
 
@@ -23,42 +26,51 @@ All names follow `git-<concern>` (see CONTRIBUTING).
 
 | Skill | Domain | Role |
 |-------|--------|------|
-| `git-worktree` | Mechanics | Detect/create isolated worktree + branch; move agent root; verify `pwd` / branch |
-| `git-issue` | Process | Multi-agent issue workflow: preflight, scope, review gates, one PR, safe merge, deferrals |
-| `git-sandbox` | Environment | Choose git CLI vs GitHub MCP when the sandbox breaks `gh` / keyring / sockets |
-| `git-ignore-ai` | Hygiene | Baseline + update loop for AI-aware `.gitignore` |
-| `git-closes` | Hygiene | Confirm the issue number before `Closes` / `Fixes` |
+| `git-worktree` | Mechanics | Verify remotes (origin/upstream/fork), then isolate with `base=` / `branch=` |
+| `git-issue` | Entry (single) | One issue → assess → plan? → implement → PR (no stacking) |
+| `git-pipeline` | Entry (batch) | Multi-issue triage, stacks, sequential merge *(stub → M2)* |
+| `git-assess` | Phase | Issue vs codebase assessment *(stub → M2)* |
+| `git-plan` | Phase | Plan + plan review *(stub → M2)* |
+| `git-implement` | Phase | Worktree + implement + review + fix *(stub → M2)* |
+| `git-pr` | Phase | One PR + Closes + merge mechanics *(stub → M2)* |
+| `git-sandbox` | Environment | git CLI vs GitHub MCP; SSH commit signing |
+| `git-ignore-ai` | Hygiene | AI-aware `.gitignore` |
+| `git-closes` | Hygiene | Verify issue # before `Closes` / `Fixes` |
 
 | Need | Use |
 |------|-----|
-| Create / enter a worktree | **`git-worktree`** (or Superpowers if already loaded) |
-| Parallel agents on one repo | **`git-issue`** (calls `git-worktree` for isolation) |
-| Sandbox git/GitHub tooling | **`git-sandbox`** |
+| Which remote is canonical / fork? | **`git-worktree` §0** (before any fetch/push) |
+| One issue | **`git-issue 123`** |
+| Many issues / stacks | **`git-pipeline #1 #2`** |
+| Sandbox / GPG broken | **`git-sandbox`** |
 | Wrong `Closes #N` | **`git-closes`** |
 | AI junk in `git status` | **`git-ignore-ai`** |
 
-Migrates from: `ai-gitignore`, `sandbox-git-github`, and the isolation preamble paste.
-
-## Layout (target)
+## Layout
 
 ```text
 ai-skills-git/
 ├── README.md
 ├── CONTRIBUTING.md
+├── PIPELINE_PLAN.md
 ├── LICENSE
+├── NOTICE
 ├── .claude-plugin/plugin.json
 ├── scripts/install-cursor.sh
 └── skills/
-    ├── git-worktree/SKILL.md
+    ├── git-worktree/
     ├── git-issue/
-    │   ├── SKILL.md
-    │   └── prompt-template.md
-    ├── git-sandbox/SKILL.md
-    ├── git-ignore-ai/SKILL.md
-    └── git-closes/SKILL.md
+    ├── git-pipeline/          # stub
+    ├── git-assess/            # stub
+    ├── git-plan/              # stub
+    ├── git-implement/         # stub
+    ├── git-pr/                # stub
+    ├── git-sandbox/
+    ├── git-ignore-ai/
+    └── git-closes/
 ```
 
-## Install (planned)
+## Install
 
 ```bash
 # Lola
@@ -71,7 +83,13 @@ lola mod add /path/to/ai-skills-git && lola install ai-skills-git --scope user
 claude plugin add /path/to/ai-skills-git
 ```
 
-Then remove old `~/.claude/skills/{ai-gitignore,sandbox-git-github}` so nothing double-loads.
+**Avoid duplicates:** remove or disable old installs that conflict:
+
+- `~/.claude/skills/issue-pipeline` (use `git-pipeline` / `git-issue`)
+- `~/.claude/skills/sandbox-git-github` (use `git-sandbox`)
+- `~/.claude/skills/ai-gitignore` (use `git-ignore-ai`)
+
+Then start a new agent chat so skills reload.
 
 ## License
 
