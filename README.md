@@ -74,12 +74,17 @@ fetched the issue via GitHub.
 ```text
 ai-skills-git/
 ├── README.md
+├── AGENTS.md                 # agent / Lola handoff (pack root)
 ├── CONTRIBUTING.md
 ├── PIPELINE_PLAN.md
 ├── LICENSE
 ├── NOTICE
 ├── .claude-plugin/plugin.json
-├── scripts/install-cursor.sh
+├── module/
+│   └── AGENTS.md             # optional Lola AI Context Module entry
+├── scripts/
+│   ├── install-cursor.sh
+│   └── validate-skills.sh
 └── skills/
     ├── git-worktree/
     ├── git-issue/
@@ -96,8 +101,13 @@ ai-skills-git/
 ## Install
 
 ```bash
-# Lola
-lola mod add /path/to/ai-skills-git && lola install ai-skills-git --scope user
+# Lola skill pack — force repo root so skills/ is discovered
+# (Lola prefers module/ when present; our skills stay at pack root)
+lola mod add /path/to/ai-skills-git --module-content=/
+# lola mod add https://github.com/leogallego/ai-skills-git.git --module-content=/
+lola install ai-skills-git --scope user
+# Optional richer context:
+# lola install ai-skills-git --scope user --append-context module/AGENTS.md
 
 # Cursor native skills
 ./scripts/install-cursor.sh
@@ -106,6 +116,10 @@ lola mod add /path/to/ai-skills-git && lola install ai-skills-git --scope user
 claude plugin add /path/to/ai-skills-git
 ```
 
+**Cursor note:** Lola may install as `.cursor/rules/*.mdc` rather than native
+Agent Skills under `~/.cursor/skills/`. Use `./scripts/install-cursor.sh` when
+you want Cursor’s skill loader.
+
 **Avoid duplicates:** remove or disable old installs that conflict:
 
 - `~/.claude/skills/issue-pipeline` (use `git-pipeline` / `git-issue`)
@@ -113,6 +127,14 @@ claude plugin add /path/to/ai-skills-git
 - `~/.claude/skills/ai-gitignore` (use `git-ignore-ai`)
 
 Then start a new agent chat so skills reload.
+
+## Validate
+
+```bash
+./scripts/validate-skills.sh
+# equivalent:
+# for d in skills/*/; do uvx --from skills-ref agentskills validate "$d"; done
+```
 
 ## License
 

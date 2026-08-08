@@ -84,8 +84,10 @@ Keep Claude-only keys under `metadata.claude-*` (not top-level).
 **Validate:**
 
 ```bash
-uvx --from skills-ref agentskills validate skills/<name>/
-grep -q "^name: $(basename skills/<name>)$" skills/<name>/SKILL.md
+./scripts/validate-skills.sh
+# or one skill:
+# uvx --from skills-ref agentskills validate skills/<name>/
+# grep -q "^name: $(basename skills/<name>)$" skills/<name>/SKILL.md
 ```
 
 ## Evaluation (sources → v1)
@@ -143,5 +145,6 @@ Commit after every significant change. At minimum, **one commit per completed PI
 - [ ] Remove old `~/.claude/skills/{ai-gitignore,sandbox-git-github,issue-pipeline}` when ready
 - [x] M5 prove on this repo (`git-issue` / stacked `git-pipeline`)
 - [x] GitHub remote (`origin` → `leogallego/ai-skills-git`)
+- [x] `scripts/validate-skills.sh`, pack `AGENTS.md` + `module/AGENTS.md`, plugin `1.1.0`
 
 **Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`). Pack license: Apache-2.0.
