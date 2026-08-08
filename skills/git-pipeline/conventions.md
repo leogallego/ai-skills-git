@@ -36,7 +36,18 @@ test_commands: []
 lint_commands: []
 always_load_review_skills: []
 claude_md_hash: ""
+# Tracker / PR API (default github). Plain git stays forge-agnostic.
+forge:
+  provider: github   # github | gitlab | gitea | forgejo | none
+  # host / API base: omit to infer from base-remote URL when possible
 ```
+
+**`forge.provider`:** selects the issue/PR (or MR) API adapter used by
+`git-issue` / `git-pipeline` / `git-pr` / `git-closes` / `git-sandbox`. Default
+when unset: **`github`**. `none` = git-only (STOP before issue/PR API steps).
+Unsupported or unknown provider → **STOP** and report what still works
+(remotes/worktree/commit/push). Concrete adapters beyond GitHub: Related to #1
+(GitLab), Related to #4 (Gitea/Forgejo).
 
 `git-issue` loads this file when present; full infer/confirm is
 `git-pipeline`’s job.

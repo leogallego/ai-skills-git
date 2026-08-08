@@ -66,8 +66,9 @@ issues; this skill’s false-positive rules are written for **GitHub**.
 ## Instructions
 
 1. Read the candidate number from the issue prompt, plan, or user message.
-2. Resolve the issue via API (GitHub MCP `issue_read` / `search_issues`, or
-   `gh issue view <n>` when auth works):
+2. Resolve the issue via the active forge provider (`git-sandbox`; default
+   GitHub MCP `issue_read` / `search_issues`, or `gh issue view <n>` when auth
+   works):
    - Exists in the intended `owner/repo`
    - State is open (unless the user explicitly wants to close a different open
      issue — still confirm title/body match the work)

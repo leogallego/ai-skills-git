@@ -35,7 +35,9 @@ when they need a non-GitHub tracker API.
 | Sandbox transport + SSH signing | Mostly (examples still say `github.com`) | `git-sandbox` |
 | Issues, PRs, labels, merge API, close verify | No — GitHub only | `git-issue`, `git-pipeline`, `git-assess`, `git-pr`, `git-closes` |
 
-Follow-ups: Related to #3 (provider abstraction), #1 (GitLab), #4 (Gitea/Forgejo).
+Configure `forge.provider` in `.git-pipeline.yml` (default `github`) — see
+`git-pipeline` conventions and `git-sandbox`. Concrete adapters: Related to #1
+(GitLab), Related to #4 (Gitea/Forgejo).
 
 ## Skills
 

@@ -55,8 +55,10 @@ Accept `#123`, `123`, or a full issue URL. If missing: **STOP** and ask.
 ### 2. Remotes + fetch issue
 
 1. `git-worktree` §0 — confirm **base-remote** / **push-remote**.
-2. Fetch issue (MCP/`gh` per `git-sandbox`). Closed/obsolete → STOP.
-3. Load `.git-pipeline.yml` if present (read only; no full infer/confirm).
+2. Resolve **forge provider** (`.git-pipeline.yml` → URL infer → default
+   `github`) via `git-sandbox`. Unsupported → **STOP** (git-only still OK).
+3. Fetch issue through that provider. Closed/obsolete → STOP.
+4. Load `.git-pipeline.yml` if present (read only; no full infer/confirm).
 
 ### 3. Phase sequence
 

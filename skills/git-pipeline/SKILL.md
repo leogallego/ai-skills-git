@@ -55,7 +55,9 @@ Shared with `git-issue` (policy only; mechanics live in linked skills):
 
 ### 2. Foundation + conventions
 
-[foundation.md](foundation.md) then [conventions.md](conventions.md).
+[foundation.md](foundation.md) then [conventions.md](conventions.md). Resolve
+`forge.provider` (default `github`). Unknown/unsupported → **STOP** API steps;
+plain git may continue (`git-sandbox`).
 
 ### 3. Triage
 
