@@ -196,6 +196,8 @@ Prefer a short shared bullet list in each entry SKILL (“Hard stops”) that ma
 
 ## Migration milestones
 
+Commit after each completed M-step (and other significant edits). See CONTRIBUTING “Commits”.
+
 ### M0 — Defaults
 
 - [x] Entry split: `git-issue` single / `git-pipeline` stacked batch

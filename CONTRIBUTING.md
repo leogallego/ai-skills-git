@@ -114,13 +114,18 @@ grep -q "^name: $(basename skills/<name>)$" skills/<name>/SKILL.md
 
 Out of v1 as standalone skills: post-merge sync, Python worktree env (too thin).
 
+## Commits
+
+Commit after every significant change. At minimum, **one commit per completed PIPELINE_PLAN milestone (M0, M1, …)** and after substantive skill/doc edits (e.g. sandbox signing guidance). Prefer SSH commit signing (`git-sandbox`); never skip signing.
+
 ## Progress
 
 - [x] Five `git-*` names + domains
 - [x] `git init -b main`; Apache-2.0 `LICENSE` + `NOTICE`, `.gitignore`, `.claude-plugin/plugin.json`, `scripts/install-cursor.sh`
 - [x] Implement `skills/git-{worktree,issue,sandbox,ignore-ai,closes}/`
 - [x] Validate with `skills-ref`; Cursor + Claude skill symlinks installed
+- [x] Initial commit on `main`
 - [ ] Retire old `~/.claude/skills/{ai-gitignore,sandbox-git-github}` (still present — remove when ready)
-- [ ] Initial commit / GitHub remote when asked
+- [ ] GitHub remote when asked
 
-**Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`).
+**Defaults chosen:** `git-ignore-ai` writes `.ai/git-ignore-ai-baseline.json` (reads legacy `.claude/ai-gitignore-baseline.json`). Workflow skills are auto-discoverable (no `claude-disable-model-invocation`). Pack license: Apache-2.0.
