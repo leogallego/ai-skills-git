@@ -14,6 +14,7 @@ For the full agent handoff (validate, install, hard rules), read the pack-root
 | Remotes / worktree | `git-worktree` |
 | One issue | `git-issue` |
 | Many issues / stacks | `git-pipeline` |
+| Architecture contracts | `git-review` |
 | Sandbox / signing | `git-sandbox` |
 | Closes wording | `git-closes` |
 | AI `.gitignore` | `git-ignore-ai` |
@@ -27,6 +28,10 @@ Register the pack with content at the **repository root** so `skills/` is
 discovered (a bare `module/` preference would miss root `skills/`):
 
 ```bash
+# Cross-client (preferred when using a local checkout)
+./scripts/install-agents.sh
+
+# Or Lola
 lola mod add https://github.com/leogallego/ai-skills-git.git --module-content=/
 lola install ai-skills-git --scope user --append-context module/AGENTS.md
 ```

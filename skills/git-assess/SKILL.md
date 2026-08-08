@@ -71,9 +71,10 @@ the project config explicitly names a skill.
 1. **Discover locally available skills** (union of **project + user**; skip
    missing roots — same skill `name` once is enough; prefer project path if
    both exist):
-   - **Project:** `**/skills/*/SKILL.md`, `.cursor/skills/**`, `.claude/skills/**`
-   - **User/host:** `~/.cursor/skills/**`, `~/.claude/skills/**` (follow
-     symlinks; use the target `SKILL.md`)
+   - **Project:** `.agents/skills/**`, `**/skills/*/SKILL.md`,
+     `.cursor/skills/**`, `.claude/skills/**`
+   - **User/host:** `~/.agents/skills/**`, `~/.cursor/skills/**`,
+     `~/.claude/skills/**` (follow symlinks; use the target `SKILL.md`)
    - Other agent skill roots the host documents (Lola, Claude plugins, …)
 2. **Index lightly:** frontmatter `name` + `description` (first ~15–30 lines).
    Do not hardcode pack names or language lists as required installs.
@@ -87,7 +88,10 @@ the project config explicitly names a skill.
    descriptions/names fit the stack **and** likely touched paths (e.g. Python
    style/testing skills on a Python change; Kotlin/Android skills on Android
    UI). Prefer fewer, on-point skills — do **not** auto-load unrelated
-   ecosystems just because they are installed.
+   ecosystems just because they are installed. If
+   `architecture.contracts` / `docs/architecture/service-contracts.md` exists
+   **and** `git-review` is in the index, include `git-review` for medium+
+   (or any issue that touches architecture docs / layer boundaries).
 5. **`always_load_review_skills` (manual config wins):** for each name listed
    in `.git-pipeline.yml`, if that skill exists in the local index (user or
    project), **always** add it to `skills_needed` — even when it looks

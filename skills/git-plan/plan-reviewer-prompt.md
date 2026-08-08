@@ -14,6 +14,10 @@ Review the plan for architecture and scope correctness. You are reviewing the **
 
 Run every check below. If a check is not applicable to this project (e.g., no layered architecture documented in the foundation context), skip it and note "N/A — no documented rules."
 
+If no `service-contracts.md` (or `architecture.contracts` path) appears in
+foundation: note **N/A — no contracts** and that `git-review` can scaffold
+them later. Do **not** run bootstrap during plan review unless the user asks.
+
 **Stack:** Prefer rules from foundation + assess `skills_needed`. Examples that
 mention ViewModel/Android/etc. apply **only** when that stack (or an equivalent
 loaded skill) is in play — never invent cross-ecosystem requirements.
