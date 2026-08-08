@@ -2,7 +2,7 @@
 
 Migrate and rebuild [`issue-pipeline-skill`](../issue-pipeline-skill) into this pack as `git-*` skills. Two thin entry points share the same phase skills — no copied workflows.
 
-**Status:** M4 local retire done — archive + GitHub push gated on M5 prove  
+**Status:** M5 prove complete on `leogallego/ai-skills-git` — M4 archive optional next  
 **Source:** `~/Claude/issue-pipeline-skill` (Apache-2.0)  
 **Target:** `~/Claude/ai-skills-git`
 
@@ -241,14 +241,16 @@ Commit after each completed M-step (and other significant edits). See CONTRIBUTI
 
 ### M5 — Prove
 
-Needs a GitHub `owner/repo` with write access + open issues (pack itself has **no remote** yet).
+Done on https://github.com/leogallego/ai-skills-git (`origin` = base = push).
 
-- [ ] Publish `ai-skills-git` (or pick another prove target) and open 3 tiny issues
-- [ ] `git-issue <n>` → one PR from default branch
-- [ ] `git-pipeline` two dependent issues → stack + sequential merge
-- [ ] Sandbox MCP + no subagent push
-- [ ] Merge-via-API when primary holds default branch
+- [x] Publish pack + open prove issues (#1–#5)
+- [x] `git-issue #5` → [PR #6](https://github.com/leogallego/ai-skills-git/pull/6) from `main` (merged; issue closed)
+- [x] `git-pipeline #2 → #3` stack → [PR #7](https://github.com/leogallego/ai-skills-git/pull/7) (`main`) then [PR #8](https://github.com/leogallego/ai-skills-git/pull/8) (base `docs/2-forge-scope`, retarget + merge)
+- [x] GitHub MCP for issues/PRs/merge; no subagent push (primary session only)
+- [x] Merge-via-API while primary checkout stayed on `main`
 - [ ] Then: archive `issue-pipeline-skill` (M4 last checkbox)
+
+**Note:** Cursor `move_agent_to_root` failed when primary held `main` (tried to check out `main` in the new root). Worked around by editing via worktree absolute paths.
 
 ---
 
